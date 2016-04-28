@@ -22,6 +22,14 @@ public abstract class AbstractPiece {
 	public int getPosition(){
 		return position;
 	}
+	
+	public boolean isValid(){
+		return true;
+	}
+	
+	public boolean isEmpty(){
+		return false;
+	}
 
 	public abstract List<Move> getMoves();
 	
@@ -32,5 +40,4 @@ public abstract class AbstractPiece {
 	protected boolean isMoveLegal(Move move){
 		return Utils.isPositionLegal(move.getEndPosition());
 	}
-
 }
