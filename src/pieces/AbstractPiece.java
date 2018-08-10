@@ -8,6 +8,7 @@ public abstract class AbstractPiece {
 	
 	private final Color color;
 	private int position;
+	protected int baseValue = 0;
 	
 	
 	public AbstractPiece(Color color, int position){
@@ -21,6 +22,10 @@ public abstract class AbstractPiece {
 	
 	public int getPosition(){
 		return position;
+	}
+
+	public int getBaseValue() {
+		return baseValue;
 	}
 	
 	public boolean isValid(){
