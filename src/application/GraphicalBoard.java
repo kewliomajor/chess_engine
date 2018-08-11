@@ -2,6 +2,7 @@ package application;
 
 import board.BoardState;
 import pieces.*;
+import sun.awt.image.OffScreenImageSource;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,6 +10,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,14 +22,17 @@ import java.util.List;
 
 public class GraphicalBoard {
 
+    private static final pieces.Color PLAYER_COLOR = pieces.Color.WHITE;
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
     private JButton[][] chessBoardSquares = new JButton[8][8];
     private JPanel chessBoard;
     private static final String COLS = "ABCDEFGH";
+    private JButton currentlySelected;
+    private Color currentlySelectedColor;
 
 
-    public static final int SIZE = 64;
-    public static final BufferedImage SHEET;
+    private static final int SIZE = 64;
+    private static final BufferedImage SHEET;
     static {
         try {
             SHEET = ImageIO.read(new File("src/resources/pieces.png"));
@@ -34,19 +40,19 @@ public class GraphicalBoard {
             throw new UncheckedIOException(x);
         }
     }
-    public static final BufferedImage GOLD_QUEEN    = SHEET.getSubimage(0 * SIZE, 0,    SIZE, SIZE);
-    public static final BufferedImage SILVER_QUEEN  = SHEET.getSubimage(0 * SIZE, SIZE, SIZE, SIZE);
-    public static final BufferedImage GOLD_KING     = SHEET.getSubimage(1 * SIZE, 0,    SIZE, SIZE);
-    public static final BufferedImage SILVER_KING   = SHEET.getSubimage(1 * SIZE, SIZE, SIZE, SIZE);
-    public static final BufferedImage GOLD_ROOK     = SHEET.getSubimage(2 * SIZE, 0,    SIZE, SIZE);
-    public static final BufferedImage SILVER_ROOK   = SHEET.getSubimage(2 * SIZE, SIZE, SIZE, SIZE);
-    public static final BufferedImage GOLD_KNIGHT   = SHEET.getSubimage(3 * SIZE, 0,    SIZE, SIZE);
-    public static final BufferedImage SILVER_KNIGHT = SHEET.getSubimage(3 * SIZE, SIZE, SIZE, SIZE);
-    public static final BufferedImage GOLD_BISHOP   = SHEET.getSubimage(4 * SIZE, 0,    SIZE, SIZE);
-    public static final BufferedImage SILVER_BISHOP = SHEET.getSubimage(4 * SIZE, SIZE, SIZE, SIZE);
-    public static final BufferedImage GOLD_PAWN     = SHEET.getSubimage(5 * SIZE, 0,    SIZE, SIZE);
-    public static final BufferedImage SILVER_PAWN   = SHEET.getSubimage(5 * SIZE, SIZE, SIZE, SIZE);
-    public static final List<BufferedImage> SPRITES =
+    private static final BufferedImage GOLD_QUEEN    = SHEET.getSubimage(0, 0,    SIZE, SIZE);
+    private static final BufferedImage SILVER_QUEEN  = SHEET.getSubimage(0, SIZE, SIZE, SIZE);
+    private static final BufferedImage GOLD_KING     = SHEET.getSubimage(SIZE, 0,    SIZE, SIZE);
+    private static final BufferedImage SILVER_KING   = SHEET.getSubimage(SIZE, SIZE, SIZE, SIZE);
+    private static final BufferedImage GOLD_ROOK     = SHEET.getSubimage(2 * SIZE, 0,    SIZE, SIZE);
+    private static final BufferedImage SILVER_ROOK   = SHEET.getSubimage(2 * SIZE, SIZE, SIZE, SIZE);
+    private static final BufferedImage GOLD_KNIGHT   = SHEET.getSubimage(3 * SIZE, 0,    SIZE, SIZE);
+    private static final BufferedImage SILVER_KNIGHT = SHEET.getSubimage(3 * SIZE, SIZE, SIZE, SIZE);
+    private static final BufferedImage GOLD_BISHOP   = SHEET.getSubimage(4 * SIZE, 0,    SIZE, SIZE);
+    private static final BufferedImage SILVER_BISHOP = SHEET.getSubimage(4 * SIZE, SIZE, SIZE, SIZE);
+    private static final BufferedImage GOLD_PAWN     = SHEET.getSubimage(5 * SIZE, 0,    SIZE, SIZE);
+    private static final BufferedImage SILVER_PAWN   = SHEET.getSubimage(5 * SIZE, SIZE, SIZE, SIZE);
+    private static final List<BufferedImage> SPRITES =
             Collections.unmodifiableList(Arrays.asList(GOLD_QUEEN,  SILVER_QUEEN,
                     GOLD_KING,   SILVER_KING,
                     GOLD_ROOK,   SILVER_ROOK,
@@ -55,7 +61,7 @@ public class GraphicalBoard {
                     GOLD_PAWN,   SILVER_PAWN));
 
 
-    GraphicalBoard() {
+    public GraphicalBoard() {
         initializeGui();
     }
 
@@ -92,6 +98,7 @@ public class GraphicalBoard {
                     AbstractPiece piece = boardState.getPiece(ii, jj);
                     icon = getPieceIcon(piece);
                 }
+                b.addActionListener(new BoardButtonListener());
                 b.setIcon(icon);
                 if ((jj % 2 == 1 && ii % 2 == 1)
                         || (jj % 2 == 0 && ii % 2 == 0)) {
@@ -172,10 +179,14 @@ public class GraphicalBoard {
             image = SPRITES.get(8 + offset);
         }
         else if (piece instanceof Queen){
-            image = SPRITES.get(0 + offset);
+            image = SPRITES.get(offset);
         }
         else if (piece instanceof King){
             image = SPRITES.get(2 + offset);
+        }
+
+        if (image == null){
+            throw new RuntimeException("No valid piece available");
         }
 
         return new ImageIcon(image);
@@ -212,5 +223,61 @@ public class GraphicalBoard {
             }
         };
         SwingUtilities.invokeLater(r);
+    }
+
+    private class BoardButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JButton button = (JButton)e.getSource();
+            ImageIcon icon = (ImageIcon)button.getIcon();
+            OffScreenImageSource source = (OffScreenImageSource)icon.getImage().getSource();
+            if (!isColorPiece(source, PLAYER_COLOR)){
+                if (currentlySelected != null){
+                    ImageIcon currentIcon = (ImageIcon)currentlySelected.getIcon();
+                    if (isColorPiece(source, pieces.Color.getOpposite(PLAYER_COLOR))){
+                        icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+                    }
+                    currentlySelected.setIcon(icon);
+                    currentlySelected.setBackground(currentlySelectedColor);
+                    button.setIcon(currentIcon);
+                    currentlySelected = null;
+                    currentlySelectedColor = null;
+                }
+            }
+            else{
+                if (currentlySelected != null){
+                    currentlySelected.setBackground(currentlySelectedColor);
+                }
+                currentlySelectedColor = button.getBackground();
+                button.setBackground(Color.YELLOW);
+                currentlySelected = button;
+            }
+        }
+
+        private boolean isColorPiece(OffScreenImageSource source, pieces.Color color){
+            int offset = 0;
+            if (color == pieces.Color.WHITE){
+                offset = 1;
+            }
+            if (source.equals(SPRITES.get(10 + offset).getSource())){
+                return true;
+            }
+            else if (source.equals(SPRITES.get(8 + offset).getSource())){
+                return true;
+            }
+            else if (source.equals(SPRITES.get(6 + offset).getSource())){
+                return true;
+            }
+            else if (source.equals(SPRITES.get(4 + offset).getSource())){
+                return true;
+            }
+            else if (source.equals(SPRITES.get(2 + offset).getSource())){
+                return true;
+            }
+            else {
+                return source.equals(SPRITES.get(offset).getSource());
+            }
+        }
     }
 }
