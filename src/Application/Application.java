@@ -1,4 +1,4 @@
-package Application;
+package application;
 
 import board.BoardState;
 
@@ -7,5 +7,6 @@ public class Application {
         BoardState board = new BoardState();
 
         System.out.println(board.toString());
+        GraphicalBoard.main(args);
     }
 }

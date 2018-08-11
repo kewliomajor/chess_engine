@@ -22,6 +22,13 @@ public class BoardState {
 	}
 
 
+	public AbstractPiece getPiece(int i, int j){
+		int row = (10 * i) + 20;
+		j+= 1;
+		return board[row + j];
+	}
+
+
 	public String toString(){
 		String boardString = "|";
 
