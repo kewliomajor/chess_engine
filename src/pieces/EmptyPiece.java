@@ -5,7 +5,7 @@ import java.util.List;
 public class EmptyPiece extends AbstractPiece{
 
 	public EmptyPiece(int position) {
-		super(Color.WHITE, position);
+		super(Color.NONE, position);
 	}
 
 	@Override

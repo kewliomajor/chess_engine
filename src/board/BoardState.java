@@ -35,10 +35,49 @@ public class BoardState {
 	}
 
 
+	/**
+	 * Excepts that the move is valid, must check isMoveValid before calling
+	 *
+	 * @param move
+	 */
 	public void makeMove(Move move){
-		//TODO check to see if move is valid
 		board[move.getEndPosition()] = board[move.getStartPosition()];
 		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
+		board[move.getEndPosition()].move(move);
+	}
+
+
+	public boolean isMoveValid(Move move){
+		AbstractPiece fromPiece = board[move.getStartPosition()];
+		AbstractPiece toPiece = board[move.getEndPosition()];
+		if (toPiece instanceof InvalidPiece){
+			return false;
+		}
+		else if (fromPiece.getColor() == toPiece.getColor()){
+			return false;
+		}
+		//now the actual logic for individual pieces
+		else if (fromPiece instanceof Pawn){
+			return isPawnMoveValid((Pawn)fromPiece, toPiece);
+		}
+		else if (fromPiece instanceof Rook){
+			return isRookMoveValid((Rook)fromPiece, toPiece);
+		}
+		else if (fromPiece instanceof Knight){
+			return isKnightMoveValid((Knight)fromPiece, toPiece);
+		}
+		else if (fromPiece instanceof Bishop){
+			return isBishopMoveValid((Bishop)fromPiece, toPiece);
+		}
+		else if (fromPiece instanceof Queen){
+			return isQueenMoveValid((Queen)fromPiece, toPiece);
+		}
+		else if (fromPiece instanceof King){
+			return isKingMoveValid((King)fromPiece, toPiece);
+		}
+		else{
+			throw new RuntimeException("Piece is not any known type: " + fromPiece.getClass());
+		}
 	}
 
 
@@ -54,6 +93,62 @@ public class BoardState {
 		}
 
 		return boardString;
+	}
+
+
+	private boolean isPawnMoveValid(Pawn fromPiece, AbstractPiece toPiece){
+		int offset = 1;
+		if (fromPiece.getColor() == Color.WHITE){
+			offset = -1;
+		}
+		//forward one
+		if (fromPiece.getPosition() + 10 * offset == toPiece.getPosition()){
+			return toPiece instanceof EmptyPiece;
+		}
+		//forward two
+		else if (fromPiece.getPosition() + 20 * offset == toPiece.getPosition()){
+			return toPiece instanceof EmptyPiece && !fromPiece.hasMoved();
+		}
+		//capturing
+		else{
+			if (fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
+				return true;
+			}
+			//rest is en passant rules
+			else if (fromPiece.getPosition() + 9 * offset == toPiece.getPosition()){
+				AbstractPiece potentialPawn = board[fromPiece.getPosition()-1];
+				if (potentialPawn instanceof Pawn){
+					return ((Pawn) potentialPawn).isDoubleMoving() && fromPiece.getColor() == Color.getOpposite(toPiece.getColor());
+				}
+			}
+			else if (fromPiece.getPosition() + 11 * offset == toPiece.getPosition()){
+				AbstractPiece potentialPawn = board[fromPiece.getPosition()+1];
+				if (potentialPawn instanceof Pawn){
+					return ((Pawn) potentialPawn).isDoubleMoving() && fromPiece.getColor() == Color.getOpposite(toPiece.getColor());
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean isRookMoveValid(Rook fromPiece, AbstractPiece toPiece){
+		return false;
+	}
+
+	private boolean isKnightMoveValid(Knight fromPiece, AbstractPiece toPiece){
+		return false;
+	}
+
+	private boolean isBishopMoveValid(Bishop fromPiece, AbstractPiece toPiece){
+		return false;
+	}
+
+	private boolean isQueenMoveValid(Queen fromPiece, AbstractPiece toPiece){
+		return false;
+	}
+
+	private boolean isKingMoveValid(King fromPiece, AbstractPiece toPiece){
+		return false;
 	}
 
 

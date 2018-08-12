@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,11 +25,11 @@ public class GraphicalBoard {
 
     private static final pieces.Color PLAYER_COLOR = pieces.Color.WHITE;
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
-    private JButton[][] chessBoardSquares = new JButton[8][8];
+    private ButtonPiece[][] chessBoardSquares = new ButtonPiece[8][8];
     private JPanel chessBoard;
     private static final String COLS = "ABCDEFGH";
     private ButtonPiece currentlySelected;
-    private Color currentlySelectedColor;
+    private ArrayList<ButtonPiece> currentValidMoves = new ArrayList<>();
     private BoardState boardState = new BoardState();
 
 
@@ -87,8 +88,6 @@ public class GraphicalBoard {
         Insets buttonMargin = new Insets(0,0,0,0);
         for (int ii = 0; ii < chessBoardSquares.length; ii++) {
             for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
-                // our chess pieces are 64x64 px in size, so we'll
-                // 'fill this in' using a transparent icon..
                 ImageIcon icon;
                 AbstractPiece piece = boardState.getPiece(ii, jj);
                 icon = getPieceIcon(piece);
@@ -99,8 +98,10 @@ public class GraphicalBoard {
                 if ((jj % 2 == 1 && ii % 2 == 1)
                         || (jj % 2 == 0 && ii % 2 == 0)) {
                     b.setBackground(Color.WHITE);
+                    b.setColor(Color.WHITE);
                 } else {
                     b.setBackground(Color.BLACK);
+                    b.setColor(Color.BLACK);
                 }
                 chessBoardSquares[jj][ii] = b;
             }
@@ -196,6 +197,17 @@ public class GraphicalBoard {
         return gui;
     }
 
+    public ButtonPiece getButtonFromBoardStatePosition(int boardStatePos) {
+        if (boardState.getBoard()[boardStatePos] instanceof InvalidPiece){
+            throw new RuntimeException("Requesting position outside of GUI bounds: " + boardStatePos);
+        }
+        boardStatePos -= 20;
+        int x = (boardStatePos%10) -1;
+        int y = boardStatePos/10;
+
+        return chessBoardSquares[x][y];
+    }
+
     public static void main(String[] args) {
         Runnable r = () -> {
             GraphicalBoard graphicalBoard = new GraphicalBoard();
@@ -224,28 +236,62 @@ public class GraphicalBoard {
             ImageIcon icon = (ImageIcon)button.getIcon();
             OffScreenImageSource source = (OffScreenImageSource)icon.getImage().getSource();
             if (!isColorPiece(source, PLAYER_COLOR)){
-                if (currentlySelected != null){
-                    int startPosition = currentlySelected.getPiece().getPosition();
-                    int endPosition = button.getPiece().getPosition();
-                    boardState.makeMove(new Move(startPosition, endPosition));
-                    ImageIcon currentIcon = (ImageIcon)currentlySelected.getIcon();
-                    if (isColorPiece(source, pieces.Color.getOpposite(PLAYER_COLOR))){
-                        icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
-                    }
-                    currentlySelected.setIcon(icon);
-                    currentlySelected.setBackground(currentlySelectedColor);
-                    button.setIcon(currentIcon);
-                    currentlySelected = null;
-                    currentlySelectedColor = null;
+                //checking for green color ensures its a valid move
+                if (currentlySelected != null && button.getBackground() == Color.GREEN){
+                    movePiece(button, icon, source);
+                    clearMoves();
+                    System.out.println(boardState.toString() + "\n\n");
                 }
             }
             else{
-                if (currentlySelected != null){
-                    currentlySelected.setBackground(currentlySelectedColor);
+                selectPiece(button);
+            }
+        }
+
+
+        private void movePiece(ButtonPiece button, ImageIcon icon, OffScreenImageSource source){
+            int startPosition = currentlySelected.getPiece().getPosition();
+            int endPosition = button.getPiece().getPosition();
+            boardState.makeMove(new Move(startPosition, endPosition));
+            ImageIcon currentIcon = (ImageIcon)currentlySelected.getIcon();
+            if (isColorPiece(source, pieces.Color.getOpposite(PLAYER_COLOR))){
+                icon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
+            }
+            currentlySelected.setIcon(icon);
+            currentlySelected.setBackground(currentlySelected.getColor());
+            EmptyPiece emptyPiece = new EmptyPiece(currentlySelected.getPiece().getPosition());
+            button.setPiece(currentlySelected.getPiece());
+            button.setIcon(currentIcon);
+            currentlySelected.setPiece(emptyPiece);
+            currentlySelected = null;
+        }
+
+        private void selectPiece(ButtonPiece button){
+            if (currentlySelected != null){
+                currentlySelected.setBackground(currentlySelected.getColor());
+            }
+            button.setBackground(Color.YELLOW);
+            currentlySelected = button;
+            clearMoves();
+            displayMoves(button.getPiece());
+        }
+
+        private void clearMoves(){
+            for (ButtonPiece button : currentValidMoves){
+                button.setBackground(button.getColor());
+            }
+            currentValidMoves.clear();
+        }
+
+        private void displayMoves(AbstractPiece piece){
+            List<Move> moves = piece.getMoves();
+            System.out.println("number of possible moves: " + moves.size());
+            for (Move move : moves){
+                if (boardState.isMoveValid(move)){
+                    ButtonPiece button = getButtonFromBoardStatePosition(move.getEndPosition());
+                    button.setBackground(Color.GREEN);
+                    currentValidMoves.add(button);
                 }
-                currentlySelectedColor = button.getBackground();
-                button.setBackground(Color.YELLOW);
-                currentlySelected = button;
             }
         }
 

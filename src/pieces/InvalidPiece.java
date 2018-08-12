@@ -4,7 +4,7 @@ import java.util.List;
 
 public class InvalidPiece extends AbstractPiece{
 	
-	private static InvalidPiece invalidPiece = new InvalidPiece(Color.BLACK, 0);
+	private static InvalidPiece invalidPiece = new InvalidPiece(Color.NONE, 0);
 
 	private InvalidPiece(Color color, int position) {
 		super(color, position);
