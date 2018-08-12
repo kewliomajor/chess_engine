@@ -111,6 +111,20 @@ public class GraphicalBoard {
     }
 
 
+    public String guiToString(){
+        String boardString = "|";
+        for (int ii = 0; ii < chessBoardSquares.length; ii++) {
+            for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
+                AbstractPiece piece = chessBoardSquares[ii][jj].getPiece();
+                boardString += " " + piece.getPosition() + " |";
+            }
+            boardString += "\n|";
+        }
+
+        return boardString;
+    }
+
+
     private void initMetadata(){
         gui.setBorder(new EmptyBorder(5, 5, 5, 5));
         JToolBar tools = new JToolBar();
@@ -241,6 +255,7 @@ public class GraphicalBoard {
                     movePiece(button, icon, source);
                     clearMoves();
                     System.out.println(boardState.toString() + "\n\n");
+                    //System.out.println(guiToString() + "\n\n");
                 }
             }
             else{
@@ -252,6 +267,8 @@ public class GraphicalBoard {
         private void movePiece(ButtonPiece button, ImageIcon icon, OffScreenImageSource source){
             int startPosition = currentlySelected.getPiece().getPosition();
             int endPosition = button.getPiece().getPosition();
+            EmptyPiece emptyPiece = new EmptyPiece(currentlySelected.getPiece().getPosition());
+            System.out.println("making move from " + startPosition + " to " + endPosition);
             boardState.makeMove(new Move(startPosition, endPosition));
             ImageIcon currentIcon = (ImageIcon)currentlySelected.getIcon();
             if (isColorPiece(source, pieces.Color.getOpposite(PLAYER_COLOR))){
@@ -259,10 +276,10 @@ public class GraphicalBoard {
             }
             currentlySelected.setIcon(icon);
             currentlySelected.setBackground(currentlySelected.getColor());
-            EmptyPiece emptyPiece = new EmptyPiece(currentlySelected.getPiece().getPosition());
             button.setPiece(currentlySelected.getPiece());
             button.setIcon(currentIcon);
             currentlySelected.setPiece(emptyPiece);
+            System.out.println("old position set to empty piece at position " + emptyPiece.getPosition());
             currentlySelected = null;
         }
 
@@ -284,7 +301,7 @@ public class GraphicalBoard {
         }
 
         private void displayMoves(AbstractPiece piece){
-            List<Move> moves = piece.getMoves();
+            List<Move> moves = piece.getMoves(boardState);
             System.out.println("number of possible moves: " + moves.size());
             for (Move move : moves){
                 if (boardState.isMoveValid(move)){

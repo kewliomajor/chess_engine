@@ -1,5 +1,7 @@
 package pieces;
 
+import board.BoardState;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,20 +14,23 @@ public class Pawn extends AbstractPiece {
         this.baseValue = 1;
     }
 
+    @Override
+    public void move(Move move){
+        doubleMove = false;
+        int startPosition = move.getStartPosition();
+        int endPosition = move.getEndPosition();
+        if (startPosition + 20 == endPosition || startPosition - 20 == endPosition){
+            doubleMove = true;
+        }
+        super.move(move);
+    }
+
     public boolean isDoubleMoving(){
         return doubleMove;
     }
 
-    public void doubleMoving(){
-        doubleMove = true;
-    }
-
-    public void finishedDoubleMove(){
-        doubleMove = false;
-    }
-
     @Override
-    public List<Move> getMoves() {
+    public List<Move> getMoves(BoardState boardState) {
         int offset = 1;
         if (color == Color.WHITE){
             offset = -1;

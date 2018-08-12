@@ -4,7 +4,7 @@ import pieces.*;
 
 public class BoardState {
 
-	private static int BOARD_SIZE = 120;
+	public static int BOARD_SIZE = 120;
 
 	private AbstractPiece[] board;
 	
@@ -132,10 +132,16 @@ public class BoardState {
 	}
 
 	private boolean isRookMoveValid(Rook fromPiece, AbstractPiece toPiece){
+		if (toPiece instanceof EmptyPiece || fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
+			return true;
+		}
 		return false;
 	}
 
 	private boolean isKnightMoveValid(Knight fromPiece, AbstractPiece toPiece){
+		if (toPiece instanceof EmptyPiece || fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
+			return true;
+		}
 		return false;
 	}
 

@@ -1,7 +1,9 @@
 package pieces;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import board.BoardState;
 import board.Utils;
 
 public abstract class AbstractPiece {
@@ -50,7 +52,48 @@ public abstract class AbstractPiece {
 		hasMoved = true;
 	}
 
-	public abstract List<Move> getMoves();
+	public abstract List<Move> getMoves(BoardState boardState);
+
+	protected List<Move> getHorizontalVerticalMoves(BoardState boardState){
+		List<Move> moves = new ArrayList<>();
+		moves.addAll(addMovesGreaterThan(boardState, position+10, BoardState.BOARD_SIZE, 10));
+		moves.addAll(addMovesLessThan(boardState, position-10, 0, 10));
+		moves.addAll(addMovesGreaterThan(boardState, position+1, position+8, 1));
+		moves.addAll(addMovesLessThan(boardState, position-1, position-8, 1));
+		return moves;
+	}
+
+	private List<Move> addMovesGreaterThan(BoardState boardState, int start, int limit, int increment){
+		List<Move> moves = new ArrayList<>();
+		for (int i = start; i < limit; i+=increment){
+			AbstractPiece piece = boardState.getBoard()[i];
+			if (piece instanceof InvalidPiece || piece.getColor() == color){
+				break;
+			}
+			else if (Color.getOpposite(piece.getColor()) == color){
+				moves.add(new Move(position, i));
+				break;
+			}
+			moves.add(new Move(position, i));
+		}
+		return moves;
+	}
+
+	private List<Move> addMovesLessThan(BoardState boardState, int start, int limit, int increment){
+		List<Move> moves = new ArrayList<>();
+		for (int i = start; i > limit; i-=increment){
+			AbstractPiece piece = boardState.getBoard()[i];
+			if (piece instanceof InvalidPiece || piece.getColor() == color){
+				break;
+			}
+			else if (Color.getOpposite(piece.getColor()) == color){
+				moves.add(new Move(position, i));
+				break;
+			}
+			moves.add(new Move(position, i));
+		}
+		return moves;
+	}
 	
 	public void makeMove(Move move){
 		this.position = move.getEndPosition();

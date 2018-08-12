@@ -1,5 +1,8 @@
 package pieces;
 
+import board.BoardState;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Knight extends AbstractPiece {
@@ -10,7 +13,16 @@ public class Knight extends AbstractPiece {
     }
 
     @Override
-    public List<Move> getMoves() {
-        return null;
+    public List<Move> getMoves(BoardState boardState) {
+        List<Move> moves = new ArrayList<>();
+        moves.add(new Move(position, position + 21));
+        moves.add(new Move(position, position + 19));
+        moves.add(new Move(position, position + 12));
+        moves.add(new Move(position, position + 8));
+        moves.add(new Move(position, position - 8));
+        moves.add(new Move(position, position - 12));
+        moves.add(new Move(position, position - 19));
+        moves.add(new Move(position, position - 21));
+        return moves;
     }
 }

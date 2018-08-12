@@ -1,5 +1,7 @@
 package pieces;
 
+import board.BoardState;
+
 import java.util.List;
 
 public class Bishop extends AbstractPiece {
@@ -10,7 +12,7 @@ public class Bishop extends AbstractPiece {
     }
 
     @Override
-    public List<Move> getMoves() {
+    public List<Move> getMoves(BoardState boardState) {
         return null;
     }
 }

@@ -1,5 +1,7 @@
 package pieces;
 
+import board.BoardState;
+
 import java.util.List;
 
 public class Rook extends AbstractPiece {
@@ -10,7 +12,7 @@ public class Rook extends AbstractPiece {
     }
 
     @Override
-    public List<Move> getMoves() {
-        return null;
+    public List<Move> getMoves(BoardState boardState) {
+        return getHorizontalVerticalMoves(boardState);
     }
 }
