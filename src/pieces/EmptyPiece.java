@@ -3,15 +3,9 @@ package pieces;
 import java.util.List;
 
 public class EmptyPiece extends AbstractPiece{
-	
-	private static EmptyPiece emptyPiece = new EmptyPiece(Color.WHITE, 0);
 
-	private EmptyPiece(Color color, int position) {
-		super(color, position);
-	}
-	
-	public static EmptyPiece getInstance(){
-		return emptyPiece;
+	public EmptyPiece(int position) {
+		super(Color.WHITE, position);
 	}
 
 	@Override

@@ -27,8 +27,9 @@ public class GraphicalBoard {
     private JButton[][] chessBoardSquares = new JButton[8][8];
     private JPanel chessBoard;
     private static final String COLS = "ABCDEFGH";
-    private JButton currentlySelected;
+    private ButtonPiece currentlySelected;
     private Color currentlySelectedColor;
+    private BoardState boardState = new BoardState();
 
 
     private static final int SIZE = 64;
@@ -40,10 +41,10 @@ public class GraphicalBoard {
             throw new UncheckedIOException(x);
         }
     }
-    private static final BufferedImage GOLD_QUEEN    = SHEET.getSubimage(0, 0,    SIZE, SIZE);
-    private static final BufferedImage SILVER_QUEEN  = SHEET.getSubimage(0, SIZE, SIZE, SIZE);
-    private static final BufferedImage GOLD_KING     = SHEET.getSubimage(SIZE, 0,    SIZE, SIZE);
-    private static final BufferedImage SILVER_KING   = SHEET.getSubimage(SIZE, SIZE, SIZE, SIZE);
+    private static final BufferedImage GOLD_KING    = SHEET.getSubimage(0, 0,    SIZE, SIZE);
+    private static final BufferedImage SILVER_KING  = SHEET.getSubimage(0, SIZE, SIZE, SIZE);
+    private static final BufferedImage GOLD_QUEEN     = SHEET.getSubimage(SIZE, 0,    SIZE, SIZE);
+    private static final BufferedImage SILVER_QUEEN   = SHEET.getSubimage(SIZE, SIZE, SIZE, SIZE);
     private static final BufferedImage GOLD_ROOK     = SHEET.getSubimage(2 * SIZE, 0,    SIZE, SIZE);
     private static final BufferedImage SILVER_ROOK   = SHEET.getSubimage(2 * SIZE, SIZE, SIZE, SIZE);
     private static final BufferedImage GOLD_KNIGHT   = SHEET.getSubimage(3 * SIZE, 0,    SIZE, SIZE);
@@ -53,8 +54,8 @@ public class GraphicalBoard {
     private static final BufferedImage GOLD_PAWN     = SHEET.getSubimage(5 * SIZE, 0,    SIZE, SIZE);
     private static final BufferedImage SILVER_PAWN   = SHEET.getSubimage(5 * SIZE, SIZE, SIZE, SIZE);
     private static final List<BufferedImage> SPRITES =
-            Collections.unmodifiableList(Arrays.asList(GOLD_QUEEN,  SILVER_QUEEN,
-                    GOLD_KING,   SILVER_KING,
+            Collections.unmodifiableList(Arrays.asList(GOLD_KING,  SILVER_KING,
+                    GOLD_QUEEN,   SILVER_QUEEN,
                     GOLD_ROOK,   SILVER_ROOK,
                     GOLD_KNIGHT, SILVER_KNIGHT,
                     GOLD_BISHOP, SILVER_BISHOP,
@@ -68,10 +69,10 @@ public class GraphicalBoard {
     public final void initializeGui() {
         // set up the main GUI
         initMetadata();
-        refreshGui(null);
+        refreshGui();
     }
 
-    public void refreshGui(BoardState boardState){
+    public void refreshGui(){
         chessBoard = new JPanel(new GridLayout(0, 9));
         chessBoard.setBorder(new LineBorder(Color.BLACK));
         try{
@@ -86,18 +87,13 @@ public class GraphicalBoard {
         Insets buttonMargin = new Insets(0,0,0,0);
         for (int ii = 0; ii < chessBoardSquares.length; ii++) {
             for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
-                JButton b = new JButton();
-                b.setMargin(buttonMargin);
                 // our chess pieces are 64x64 px in size, so we'll
                 // 'fill this in' using a transparent icon..
-                ImageIcon icon = null;
-                if (boardState == null){
-                    icon = getPieceIcon(EmptyPiece.getInstance());
-                }
-                else{
-                    AbstractPiece piece = boardState.getPiece(ii, jj);
-                    icon = getPieceIcon(piece);
-                }
+                ImageIcon icon;
+                AbstractPiece piece = boardState.getPiece(ii, jj);
+                icon = getPieceIcon(piece);
+                ButtonPiece b = new ButtonPiece(piece);
+                b.setMargin(buttonMargin);
                 b.addActionListener(new BoardButtonListener());
                 b.setIcon(icon);
                 if ((jj % 2 == 1 && ii % 2 == 1)
@@ -179,10 +175,10 @@ public class GraphicalBoard {
             image = SPRITES.get(8 + offset);
         }
         else if (piece instanceof Queen){
-            image = SPRITES.get(offset);
+            image = SPRITES.get(2 + offset);
         }
         else if (piece instanceof King){
-            image = SPRITES.get(2 + offset);
+            image = SPRITES.get(offset);
         }
 
         if (image == null){
@@ -201,26 +197,21 @@ public class GraphicalBoard {
     }
 
     public static void main(String[] args) {
-        Runnable r = new Runnable() {
+        Runnable r = () -> {
+            GraphicalBoard graphicalBoard = new GraphicalBoard();
+            graphicalBoard.refreshGui();
 
-            @Override
-            public void run() {
-                BoardState board = new BoardState();
-                GraphicalBoard graphicalBoard = new GraphicalBoard();
-                graphicalBoard.refreshGui(board);
+            JFrame frame = new JFrame("Cora's Chess Engine");
+            frame.add(graphicalBoard.getGui());
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setLocationByPlatform(true);
 
-                JFrame frame = new JFrame("Cora's Chess Engine");
-                frame.add(graphicalBoard.getGui());
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                frame.setLocationByPlatform(true);
-
-                // ensures the frame is the minimum size it needs to be
-                // in order display the components within it
-                frame.pack();
-                // ensures the minimum size is enforced.
-                frame.setMinimumSize(frame.getSize());
-                frame.setVisible(true);
-            }
+            // ensures the frame is the minimum size it needs to be
+            // in order display the components within it
+            frame.pack();
+            // ensures the minimum size is enforced.
+            frame.setMinimumSize(frame.getSize());
+            frame.setVisible(true);
         };
         SwingUtilities.invokeLater(r);
     }
@@ -229,11 +220,14 @@ public class GraphicalBoard {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            JButton button = (JButton)e.getSource();
+            ButtonPiece button = (ButtonPiece)e.getSource();
             ImageIcon icon = (ImageIcon)button.getIcon();
             OffScreenImageSource source = (OffScreenImageSource)icon.getImage().getSource();
             if (!isColorPiece(source, PLAYER_COLOR)){
                 if (currentlySelected != null){
+                    int startPosition = currentlySelected.getPiece().getPosition();
+                    int endPosition = button.getPiece().getPosition();
+                    boardState.makeMove(new Move(startPosition, endPosition));
                     ImageIcon currentIcon = (ImageIcon)currentlySelected.getIcon();
                     if (isColorPiece(source, pieces.Color.getOpposite(PLAYER_COLOR))){
                         icon = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));

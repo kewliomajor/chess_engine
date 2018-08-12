@@ -15,6 +15,12 @@ public class BoardState {
 		board = new AbstractPiece[BOARD_SIZE];
 		setupStartingPieces();
 	}
+
+
+	public BoardState(BoardState boardState){
+		//TODO copy the board state
+		board = new AbstractPiece[BOARD_SIZE];
+	}
 	
 	
 	public AbstractPiece[] getBoard(){
@@ -26,6 +32,13 @@ public class BoardState {
 		int row = (10 * i) + 20;
 		j+= 1;
 		return board[row + j];
+	}
+
+
+	public void makeMove(Move move){
+		//TODO check to see if move is valid
+		board[move.getEndPosition()] = board[move.getStartPosition()];
+		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
 	}
 
 
@@ -146,7 +159,7 @@ public class BoardState {
 			case 98:
 				return new Rook(Color.WHITE, position);
 			default:
-				return EmptyPiece.getInstance();
+				return new EmptyPiece(position);
 		}
 	}
 }
