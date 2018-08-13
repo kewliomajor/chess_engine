@@ -2,6 +2,7 @@ package pieces;
 
 import board.BoardState;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InvalidPiece extends AbstractPiece{
@@ -18,7 +19,7 @@ public class InvalidPiece extends AbstractPiece{
 
 	@Override
 	public List<Move> getMoves(BoardState boardState) {
-		return null;
+		return new ArrayList<>();
 	}
 	
 	@Override

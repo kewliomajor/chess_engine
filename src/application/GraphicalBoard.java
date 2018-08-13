@@ -1,6 +1,7 @@
 package application;
 
 import board.BoardState;
+import engine.ChessEngine;
 import pieces.*;
 import sun.awt.image.OffScreenImageSource;
 
@@ -30,7 +31,10 @@ public class GraphicalBoard {
     private static final String COLS = "ABCDEFGH";
     private ButtonPiece currentlySelected;
     private ArrayList<ButtonPiece> currentValidMoves = new ArrayList<>();
+    private ArrayList<ButtonPiece> lastComputerMove = new ArrayList<>();
     private BoardState boardState = new BoardState();
+    private ChessEngine engine;
+    private boolean waitingForComputer = false;
 
 
     private static final int SIZE = 64;
@@ -64,6 +68,7 @@ public class GraphicalBoard {
 
 
     public GraphicalBoard() {
+        engine = new ChessEngine(pieces.Color.getOpposite(PLAYER_COLOR));
         initializeGui();
     }
 
@@ -243,11 +248,11 @@ public class GraphicalBoard {
     }
 
 
-    private void movePiece(ButtonPiece button, ImageIcon icon, OffScreenImageSource source){
-        int startPosition = currentlySelected.getPiece().getPosition();
-        int endPosition = button.getPiece().getPosition();
+    private void movePiece(ButtonPiece toButton, ButtonPiece fromButton){
+        int startPosition = fromButton.getPiece().getPosition();
+        int endPosition = toButton.getPiece().getPosition();
         //case for castling
-        if (currentlySelected.getPiece() instanceof King && (startPosition + 2 == endPosition || startPosition -2 == endPosition)){
+        if (fromButton.getPiece() instanceof King && (startPosition + 2 == endPosition || startPosition -2 == endPosition)){
             EmptyPiece rookEmptyPiece;
             int rookPosition;
             int futureRookPosition;
@@ -270,29 +275,30 @@ public class GraphicalBoard {
             rook.setIcon(emptyIcon);
 
 
-            moveNormally(button, icon, source);
+            moveNormally(toButton, fromButton);
         }
         else{
-            moveNormally(button, icon, source);
+            moveNormally(toButton, fromButton);
         }
-        currentlySelected = null;
     }
 
-    private void moveNormally(ButtonPiece button, ImageIcon icon, OffScreenImageSource source){
-        int startPosition = currentlySelected.getPiece().getPosition();
+    private void moveNormally(ButtonPiece button, ButtonPiece fromButton){
+        ImageIcon icon = (ImageIcon)button.getIcon();
+        OffScreenImageSource source = (OffScreenImageSource)icon.getImage().getSource();
+        int startPosition = fromButton.getPiece().getPosition();
         int endPosition = button.getPiece().getPosition();
-        EmptyPiece emptyPiece = new EmptyPiece(currentlySelected.getPiece().getPosition());
+        EmptyPiece emptyPiece = new EmptyPiece(fromButton.getPiece().getPosition());
         System.out.println("making move from " + startPosition + " to " + endPosition);
         boardState.makeMove(new Move(startPosition, endPosition));
-        ImageIcon currentIcon = (ImageIcon)currentlySelected.getIcon();
-        if (isColorPiece(source, pieces.Color.getOpposite(PLAYER_COLOR))){
+        ImageIcon currentIcon = (ImageIcon)fromButton.getIcon();
+        if (isColorPiece(source, pieces.Color.getOpposite(fromButton.getPiece().getColor()))){
             icon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
         }
-        currentlySelected.setIcon(icon);
-        currentlySelected.setBackground(currentlySelected.getColor());
-        button.setPiece(currentlySelected.getPiece());
+        fromButton.setIcon(icon);
+        fromButton.setBackground(fromButton.getColor());
+        button.setPiece(fromButton.getPiece());
         button.setIcon(currentIcon);
-        currentlySelected.setPiece(emptyPiece);
+        fromButton.setPiece(emptyPiece);
         System.out.println("old position set to empty piece at position " + emptyPiece.getPosition());
     }
 
@@ -350,6 +356,22 @@ public class GraphicalBoard {
         }
     }
 
+    private void makeEngineMove(){
+        for (ButtonPiece button : lastComputerMove){
+            button.setBackground(button.getColor());
+        }
+        lastComputerMove.clear();
+        Move move = engine.getBestMove(boardState);
+        ButtonPiece fromPiece = getButtonFromBoardStatePosition(move.getStartPosition());
+        ButtonPiece toPiece = getButtonFromBoardStatePosition(move.getEndPosition());
+        movePiece(toPiece, fromPiece);
+        toPiece.setBackground(Color.YELLOW);
+        fromPiece.setBackground(Color.YELLOW);
+        lastComputerMove.add(toPiece);
+        lastComputerMove.add(fromPiece);
+        waitingForComputer = false;
+    }
+
     private class BoardButtonListener implements ActionListener {
 
         @Override
@@ -359,10 +381,13 @@ public class GraphicalBoard {
             OffScreenImageSource source = (OffScreenImageSource)icon.getImage().getSource();
             if (!isColorPiece(source, PLAYER_COLOR)){
                 //checking for green color ensures its a valid move
-                if (currentlySelected != null && button.getBackground() == Color.GREEN){
-                    movePiece(button, icon, source);
+                if (currentlySelected != null && button.getBackground() == Color.GREEN && !waitingForComputer){
+                    movePiece(button, currentlySelected);
+                    currentlySelected = null;
                     clearMoves();
                     System.out.println(boardState.toString() + "\n\n");
+                    waitingForComputer = true;
+                    makeEngineMove();
                     //System.out.println(guiToString() + "\n\n");
                 }
             }

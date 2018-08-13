@@ -2,6 +2,9 @@ package board;
 
 import pieces.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BoardState {
 
 	public static int BOARD_SIZE = 120;
@@ -47,6 +50,24 @@ public class BoardState {
 	}
 
 
+	public List<Move> getAllValidMoves(Color color){
+		List<Move> validMoves = new ArrayList<>();
+		System.out.println("looking for moves for color " + color);
+		for (int i = 21; i < 99; i++){
+			if (board[i].getColor() != color){
+				continue;
+			}
+			List<Move> moves = board[i].getMoves(this);
+			for (Move move : moves){
+				if (isMoveValid(move)){
+					validMoves.add(move);
+				}
+			}
+		}
+		return validMoves;
+	}
+
+
 	public boolean isMoveValid(Move move){
 		AbstractPiece fromPiece = board[move.getStartPosition()];
 		AbstractPiece toPiece = board[move.getEndPosition()];
@@ -61,16 +82,16 @@ public class BoardState {
 			return isPawnMoveValid((Pawn)fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof Rook){
-			return isBasicMoveValid((Rook)fromPiece, toPiece);
+			return isBasicMoveValid(fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof Knight){
-			return isBasicMoveValid((Knight)fromPiece, toPiece);
+			return isBasicMoveValid(fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof Bishop){
-			return isBasicMoveValid((Bishop)fromPiece, toPiece);
+			return isBasicMoveValid(fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof Queen){
-			return isBasicMoveValid((Queen)fromPiece, toPiece);
+			return isBasicMoveValid(fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof King){
 			return isKingMoveValid((King)fromPiece, toPiece);
