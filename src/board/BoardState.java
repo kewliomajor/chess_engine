@@ -61,16 +61,16 @@ public class BoardState {
 			return isPawnMoveValid((Pawn)fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof Rook){
-			return isRookMoveValid((Rook)fromPiece, toPiece);
+			return isBasicMoveValid((Rook)fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof Knight){
-			return isKnightMoveValid((Knight)fromPiece, toPiece);
+			return isBasicMoveValid((Knight)fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof Bishop){
-			return isBishopMoveValid((Bishop)fromPiece, toPiece);
+			return isBasicMoveValid((Bishop)fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof Queen){
-			return isQueenMoveValid((Queen)fromPiece, toPiece);
+			return isBasicMoveValid((Queen)fromPiece, toPiece);
 		}
 		else if (fromPiece instanceof King){
 			return isKingMoveValid((King)fromPiece, toPiece);
@@ -93,6 +93,14 @@ public class BoardState {
 		}
 
 		return boardString;
+	}
+
+
+	private boolean isBasicMoveValid(AbstractPiece fromPiece, AbstractPiece toPiece){
+		if (toPiece instanceof EmptyPiece || fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
+			return true;
+		}
+		return false;
 	}
 
 
@@ -131,29 +139,11 @@ public class BoardState {
 		return false;
 	}
 
-	private boolean isRookMoveValid(Rook fromPiece, AbstractPiece toPiece){
-		if (toPiece instanceof EmptyPiece || fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
-			return true;
-		}
-		return false;
-	}
-
-	private boolean isKnightMoveValid(Knight fromPiece, AbstractPiece toPiece){
-		if (toPiece instanceof EmptyPiece || fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
-			return true;
-		}
-		return false;
-	}
-
-	private boolean isBishopMoveValid(Bishop fromPiece, AbstractPiece toPiece){
-		return false;
-	}
-
-	private boolean isQueenMoveValid(Queen fromPiece, AbstractPiece toPiece){
-		return false;
-	}
 
 	private boolean isKingMoveValid(King fromPiece, AbstractPiece toPiece){
+		if (toPiece instanceof EmptyPiece || fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
+			return true;
+		}
 		return false;
 	}
 

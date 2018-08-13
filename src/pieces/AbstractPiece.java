@@ -63,6 +63,15 @@ public abstract class AbstractPiece {
 		return moves;
 	}
 
+	protected List<Move> getDiagonalMoves(BoardState boardState){
+		List<Move> moves = new ArrayList<>();
+		moves.addAll(addMovesGreaterThan(boardState, position+11, BoardState.BOARD_SIZE, 11));
+		moves.addAll(addMovesGreaterThan(boardState, position+9, BoardState.BOARD_SIZE, 9));
+		moves.addAll(addMovesLessThan(boardState, position-11, 0, 11));
+		moves.addAll(addMovesLessThan(boardState, position-9, 0, 9));
+		return moves;
+	}
+
 	private List<Move> addMovesGreaterThan(BoardState boardState, int start, int limit, int increment){
 		List<Move> moves = new ArrayList<>();
 		for (int i = start; i < limit; i+=increment){

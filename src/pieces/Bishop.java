@@ -13,6 +13,6 @@ public class Bishop extends AbstractPiece {
 
     @Override
     public List<Move> getMoves(BoardState boardState) {
-        return null;
+        return getDiagonalMoves(boardState);
     }
 }

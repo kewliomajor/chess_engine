@@ -1,7 +1,7 @@
 package pieces;
 
 public class Move {
-	
+
 	private int startPosition;
 	private int endPosition;
 	

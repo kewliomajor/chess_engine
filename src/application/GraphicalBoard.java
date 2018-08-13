@@ -242,6 +242,114 @@ public class GraphicalBoard {
         SwingUtilities.invokeLater(r);
     }
 
+
+    private void movePiece(ButtonPiece button, ImageIcon icon, OffScreenImageSource source){
+        int startPosition = currentlySelected.getPiece().getPosition();
+        int endPosition = button.getPiece().getPosition();
+        //case for castling
+        if (currentlySelected.getPiece() instanceof King && (startPosition + 2 == endPosition || startPosition -2 == endPosition)){
+            EmptyPiece rookEmptyPiece;
+            int rookPosition;
+            int futureRookPosition;
+            if (startPosition + 2 == endPosition){
+                rookPosition = startPosition+3;
+                futureRookPosition = startPosition+1;
+            }
+            else{
+                rookPosition = startPosition-4;
+                futureRookPosition = startPosition-1;
+            }
+            ButtonPiece rook = getButtonFromBoardStatePosition(rookPosition);
+            ButtonPiece futureRook = getButtonFromBoardStatePosition(futureRookPosition);
+            rookEmptyPiece = new EmptyPiece(rookPosition);
+            ImageIcon emptyIcon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
+            boardState.makeMove(new Move(rookPosition, futureRookPosition));
+            futureRook.setPiece(rook.getPiece());
+            futureRook.setIcon(rook.getIcon());
+            rook.setPiece(rookEmptyPiece);
+            rook.setIcon(emptyIcon);
+
+
+            moveNormally(button, icon, source);
+        }
+        else{
+            moveNormally(button, icon, source);
+        }
+        currentlySelected = null;
+    }
+
+    private void moveNormally(ButtonPiece button, ImageIcon icon, OffScreenImageSource source){
+        int startPosition = currentlySelected.getPiece().getPosition();
+        int endPosition = button.getPiece().getPosition();
+        EmptyPiece emptyPiece = new EmptyPiece(currentlySelected.getPiece().getPosition());
+        System.out.println("making move from " + startPosition + " to " + endPosition);
+        boardState.makeMove(new Move(startPosition, endPosition));
+        ImageIcon currentIcon = (ImageIcon)currentlySelected.getIcon();
+        if (isColorPiece(source, pieces.Color.getOpposite(PLAYER_COLOR))){
+            icon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
+        }
+        currentlySelected.setIcon(icon);
+        currentlySelected.setBackground(currentlySelected.getColor());
+        button.setPiece(currentlySelected.getPiece());
+        button.setIcon(currentIcon);
+        currentlySelected.setPiece(emptyPiece);
+        System.out.println("old position set to empty piece at position " + emptyPiece.getPosition());
+    }
+
+    private void selectPiece(ButtonPiece button){
+        if (currentlySelected != null){
+            currentlySelected.setBackground(currentlySelected.getColor());
+        }
+        button.setBackground(Color.YELLOW);
+        currentlySelected = button;
+        clearMoves();
+        displayMoves(button.getPiece());
+    }
+
+    private void clearMoves(){
+        for (ButtonPiece button : currentValidMoves){
+            button.setBackground(button.getColor());
+        }
+        currentValidMoves.clear();
+    }
+
+    private void displayMoves(AbstractPiece piece){
+        List<Move> moves = piece.getMoves(boardState);
+        System.out.println("number of possible moves: " + moves.size());
+        for (Move move : moves){
+            if (boardState.isMoveValid(move)){
+                ButtonPiece button = getButtonFromBoardStatePosition(move.getEndPosition());
+                button.setBackground(Color.GREEN);
+                currentValidMoves.add(button);
+            }
+        }
+    }
+
+    private boolean isColorPiece(OffScreenImageSource source, pieces.Color color){
+        int offset = 0;
+        if (color == pieces.Color.WHITE){
+            offset = 1;
+        }
+        if (source.equals(SPRITES.get(10 + offset).getSource())){
+            return true;
+        }
+        else if (source.equals(SPRITES.get(8 + offset).getSource())){
+            return true;
+        }
+        else if (source.equals(SPRITES.get(6 + offset).getSource())){
+            return true;
+        }
+        else if (source.equals(SPRITES.get(4 + offset).getSource())){
+            return true;
+        }
+        else if (source.equals(SPRITES.get(2 + offset).getSource())){
+            return true;
+        }
+        else {
+            return source.equals(SPRITES.get(offset).getSource());
+        }
+    }
+
     private class BoardButtonListener implements ActionListener {
 
         @Override
@@ -260,80 +368,6 @@ public class GraphicalBoard {
             }
             else{
                 selectPiece(button);
-            }
-        }
-
-
-        private void movePiece(ButtonPiece button, ImageIcon icon, OffScreenImageSource source){
-            int startPosition = currentlySelected.getPiece().getPosition();
-            int endPosition = button.getPiece().getPosition();
-            EmptyPiece emptyPiece = new EmptyPiece(currentlySelected.getPiece().getPosition());
-            System.out.println("making move from " + startPosition + " to " + endPosition);
-            boardState.makeMove(new Move(startPosition, endPosition));
-            ImageIcon currentIcon = (ImageIcon)currentlySelected.getIcon();
-            if (isColorPiece(source, pieces.Color.getOpposite(PLAYER_COLOR))){
-                icon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
-            }
-            currentlySelected.setIcon(icon);
-            currentlySelected.setBackground(currentlySelected.getColor());
-            button.setPiece(currentlySelected.getPiece());
-            button.setIcon(currentIcon);
-            currentlySelected.setPiece(emptyPiece);
-            System.out.println("old position set to empty piece at position " + emptyPiece.getPosition());
-            currentlySelected = null;
-        }
-
-        private void selectPiece(ButtonPiece button){
-            if (currentlySelected != null){
-                currentlySelected.setBackground(currentlySelected.getColor());
-            }
-            button.setBackground(Color.YELLOW);
-            currentlySelected = button;
-            clearMoves();
-            displayMoves(button.getPiece());
-        }
-
-        private void clearMoves(){
-            for (ButtonPiece button : currentValidMoves){
-                button.setBackground(button.getColor());
-            }
-            currentValidMoves.clear();
-        }
-
-        private void displayMoves(AbstractPiece piece){
-            List<Move> moves = piece.getMoves(boardState);
-            System.out.println("number of possible moves: " + moves.size());
-            for (Move move : moves){
-                if (boardState.isMoveValid(move)){
-                    ButtonPiece button = getButtonFromBoardStatePosition(move.getEndPosition());
-                    button.setBackground(Color.GREEN);
-                    currentValidMoves.add(button);
-                }
-            }
-        }
-
-        private boolean isColorPiece(OffScreenImageSource source, pieces.Color color){
-            int offset = 0;
-            if (color == pieces.Color.WHITE){
-                offset = 1;
-            }
-            if (source.equals(SPRITES.get(10 + offset).getSource())){
-                return true;
-            }
-            else if (source.equals(SPRITES.get(8 + offset).getSource())){
-                return true;
-            }
-            else if (source.equals(SPRITES.get(6 + offset).getSource())){
-                return true;
-            }
-            else if (source.equals(SPRITES.get(4 + offset).getSource())){
-                return true;
-            }
-            else if (source.equals(SPRITES.get(2 + offset).getSource())){
-                return true;
-            }
-            else {
-                return source.equals(SPRITES.get(offset).getSource());
             }
         }
     }
