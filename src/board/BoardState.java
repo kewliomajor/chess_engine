@@ -12,6 +12,7 @@ public class BoardState {
 	private AbstractPiece[] board;
 	private AbstractPiece blackKing;
 	private AbstractPiece whiteKing;
+	private Color currentMove = Color.WHITE;
 	
 	/**
 	 * Creates a board with all pieces in the starting formation
@@ -24,6 +25,7 @@ public class BoardState {
 
 	public BoardState(BoardState boardState){
 		//TODO copy the board state
+		currentMove = boardState.getCurrentMoveColor();
 		board = new AbstractPiece[BOARD_SIZE];
 		for (int i = 0; i < BOARD_SIZE; i++){
 			AbstractPiece existingPiece = boardState.getBoard()[i];
@@ -77,6 +79,28 @@ public class BoardState {
 	}
 
 
+	public Color getCurrentMoveColor(){
+		return currentMove;
+	}
+
+
+	public double getBoardScore(){
+		double boardScore = 0;
+		for (int i = 0; i < BOARD_SIZE; i++){
+			if (board[i] instanceof InvalidPiece || board[i] instanceof EmptyPiece){
+				continue;
+			}
+			int offset = 1;
+			if (board[i].getColor() != currentMove){
+				offset = -1;
+			}
+			int score = board[i].getBaseValue() * offset;
+			boardScore += score;
+		}
+		return boardScore;
+	}
+
+
 	/**
 	 * Excepts that the move is valid, must check isMoveValid before calling
 	 *
@@ -86,12 +110,14 @@ public class BoardState {
 		board[move.getEndPosition()] = board[move.getStartPosition()];
 		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
 		board[move.getEndPosition()].move(move);
+		System.out.println("current move is for " + currentMove);
+		currentMove = Color.getOpposite(currentMove);
+		System.out.println("current move has been changed to " + currentMove);
 	}
 
 
 	public List<Move> getAllValidMoves(Color color){
 		List<Move> validMoves = new ArrayList<>();
-		System.out.println("looking for moves for color " + color);
 		for (int i = 21; i < 99; i++){
 			if (board[i].getColor() != color){
 				continue;
@@ -185,7 +211,6 @@ public class BoardState {
 			return true;
 		}
 
-		System.out.println("King is not in check");
 		return false;
 	}
 
@@ -426,6 +451,25 @@ public class BoardState {
 
 
 	private boolean isKingMoveValid(King fromPiece, AbstractPiece toPiece){
+		//case for castling
+		Move move;
+		BoardState afterMoveBoard;
+		if (fromPiece.getPosition()+2 == toPiece.getPosition()){
+			afterMoveBoard = new BoardState(this);
+			move = new Move(fromPiece.getPosition(), fromPiece.getPosition()+1);
+			afterMoveBoard.makeMove(move);
+			if (afterMoveBoard.kingInCheck(fromPiece.getColor())){
+				return false;
+			}
+		}
+		else if (fromPiece.getPosition()-2 == toPiece.getPosition()){
+			afterMoveBoard = new BoardState(this);
+			move = new Move(fromPiece.getPosition(), fromPiece.getPosition()-1);
+			afterMoveBoard.makeMove(move);
+			if (afterMoveBoard.kingInCheck(fromPiece.getColor())){
+				return false;
+			}
+		}
 		if (toPiece instanceof EmptyPiece || fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
 			return true;
 		}
