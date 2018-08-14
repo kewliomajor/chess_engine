@@ -11,6 +11,12 @@ public class Queen extends AbstractPiece {
         this.baseValue = 9;
     }
 
+    public Queen(Queen queen){
+        super(queen.getColor(), queen.getPosition());
+        baseValue = queen.baseValue;
+        hasMoved = queen.hasMoved;
+    }
+
     @Override
     public List<Move> getMoves(BoardState boardState) {
         List<Move> moves = getHorizontalVerticalMoves(boardState);

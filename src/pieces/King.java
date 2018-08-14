@@ -9,7 +9,13 @@ public class King extends AbstractPiece {
 
     public King(Color color, int position){
         super(color, position);
-        this.baseValue = 1000;
+        this.baseValue = 0;
+    }
+
+    public King(King king){
+        super(king.getColor(), king.getPosition());
+        baseValue = king.baseValue;
+        hasMoved = king.hasMoved;
     }
 
     @Override

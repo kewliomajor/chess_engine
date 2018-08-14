@@ -18,6 +18,10 @@ public class ChessEngine {
     public Move getBestMove(BoardState boardState){
         List<Move> validMoves = boardState.getAllValidMoves(engineColor);
 
+        if (validMoves.size() == 0){
+            throw new RuntimeException("No valid moves, checkmate");
+        }
+
         Random rand = new Random();
 
         int i = rand.nextInt(validMoves.size());

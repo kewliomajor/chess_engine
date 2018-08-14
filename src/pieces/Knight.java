@@ -12,6 +12,12 @@ public class Knight extends AbstractPiece {
         this.baseValue = 3;
     }
 
+    public Knight(Knight knight){
+        super(knight.getColor(), knight.getPosition());
+        baseValue = knight.baseValue;
+        hasMoved = knight.hasMoved;
+    }
+
     @Override
     public List<Move> getMoves(BoardState boardState) {
         List<Move> moves = new ArrayList<>();

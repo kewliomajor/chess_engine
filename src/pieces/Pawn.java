@@ -14,6 +14,13 @@ public class Pawn extends AbstractPiece {
         this.baseValue = 1;
     }
 
+    public Pawn(Pawn pawn){
+        super(pawn.getColor(), pawn.getPosition());
+        baseValue = pawn.baseValue;
+        doubleMove = pawn.doubleMove;
+        hasMoved = pawn.hasMoved;
+    }
+
     @Override
     public void move(Move move){
         doubleMove = false;

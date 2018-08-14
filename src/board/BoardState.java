@@ -10,6 +10,8 @@ public class BoardState {
 	public static int BOARD_SIZE = 120;
 
 	private AbstractPiece[] board;
+	private AbstractPiece blackKing;
+	private AbstractPiece whiteKing;
 	
 	/**
 	 * Creates a board with all pieces in the starting formation
@@ -23,6 +25,43 @@ public class BoardState {
 	public BoardState(BoardState boardState){
 		//TODO copy the board state
 		board = new AbstractPiece[BOARD_SIZE];
+		for (int i = 0; i < BOARD_SIZE; i++){
+			AbstractPiece existingPiece = boardState.getBoard()[i];
+			if (existingPiece instanceof InvalidPiece){
+				board[i] = InvalidPiece.getInstance();
+			}
+			else if (existingPiece instanceof EmptyPiece){
+				board[i] = new EmptyPiece(i);
+			}
+			else if (existingPiece instanceof Pawn){
+				board[i] = new Pawn((Pawn)existingPiece);
+			}
+			else if (existingPiece instanceof Rook){
+				board[i] = new Rook((Rook)existingPiece);
+			}
+			else if (existingPiece instanceof Knight){
+				board[i] = new Knight((Knight)existingPiece);
+			}
+			else if (existingPiece instanceof Bishop){
+				board[i] = new Bishop((Bishop)existingPiece);
+			}
+			else if (existingPiece instanceof Queen){
+				board[i] = new Queen((Queen)existingPiece);
+			}
+			else if (existingPiece instanceof King){
+				King king = new King((King)existingPiece);
+				if (existingPiece.getColor() == Color.BLACK){
+					blackKing = king;
+				}
+				else if (existingPiece.getColor() == Color.WHITE){
+					whiteKing = king;
+				}
+				else{
+					throw new RuntimeException("King has an impossible color: " + existingPiece.getColor());
+				}
+				board[i] = king;
+			}
+		}
 	}
 	
 	
@@ -79,26 +118,251 @@ public class BoardState {
 		}
 		//now the actual logic for individual pieces
 		else if (fromPiece instanceof Pawn){
-			return isPawnMoveValid((Pawn)fromPiece, toPiece);
+			if (!isPawnMoveValid((Pawn)fromPiece, toPiece)){
+				return false;
+			}
 		}
 		else if (fromPiece instanceof Rook){
-			return isBasicMoveValid(fromPiece, toPiece);
+			if (!isBasicMoveValid(fromPiece, toPiece)){
+				return false;
+			}
 		}
 		else if (fromPiece instanceof Knight){
-			return isBasicMoveValid(fromPiece, toPiece);
+			if (!isBasicMoveValid(fromPiece, toPiece)){
+				return false;
+			}
 		}
 		else if (fromPiece instanceof Bishop){
-			return isBasicMoveValid(fromPiece, toPiece);
+			if (!isBasicMoveValid(fromPiece, toPiece)){
+				return false;
+			}
 		}
 		else if (fromPiece instanceof Queen){
-			return isBasicMoveValid(fromPiece, toPiece);
+			if (!isBasicMoveValid(fromPiece, toPiece)){
+				return false;
+			}
 		}
 		else if (fromPiece instanceof King){
-			return isKingMoveValid((King)fromPiece, toPiece);
+			if (!isKingMoveValid((King)fromPiece, toPiece)){
+				return false;
+			}
 		}
 		else{
 			throw new RuntimeException("Piece is not any known type: " + fromPiece.getClass());
 		}
+
+		BoardState afterMoveBoard = new BoardState(this);
+		afterMoveBoard.makeMove(move);
+		return !afterMoveBoard.kingInCheck(fromPiece.getColor());
+	}
+
+
+	private boolean kingInCheck(Color color){
+		AbstractPiece targetKing;
+		if (color == Color.WHITE){
+			targetKing = whiteKing;
+		}
+		else if (color == Color.BLACK){
+			targetKing = blackKing;
+		}
+		else{
+			throw new RuntimeException("Trying to determine if King is in check but given bad king color: " + color);
+		}
+
+		if (pawnChecks(targetKing)){
+			return true;
+		}
+		if (knightChecks(targetKing)){
+			return true;
+		}
+		if (kingChecks(targetKing)){
+			return true;
+		}
+		if (horizontalVerticalChecks(targetKing)){
+			return true;
+		}
+		if (diagonalChecks(targetKing)){
+			return true;
+		}
+
+		System.out.println("King is not in check");
+		return false;
+	}
+
+
+	private boolean pawnChecks(AbstractPiece targetKing){
+		int offset = 1;
+		if (targetKing.getColor() == Color.WHITE){
+			offset = -1;
+		}
+		Color oppositeColor = Color.getOpposite(targetKing.getColor());
+		AbstractPiece potentialPawn = board[targetKing.getPosition()+11*offset];
+		if (potentialPawn instanceof Pawn && potentialPawn.getColor() == oppositeColor){
+			return true;
+		}
+		potentialPawn = board[targetKing.getPosition()+9*offset];
+		if (potentialPawn instanceof Pawn && potentialPawn.getColor() == oppositeColor){
+			return true;
+		}
+		return false;
+	}
+
+	private boolean knightChecks(AbstractPiece targetKing){
+		Color oppositeColor = Color.getOpposite(targetKing.getColor());
+		AbstractPiece potentialKnight = board[targetKing.getPosition()+21];
+		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKnight = board[targetKing.getPosition()+19];
+		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKnight = board[targetKing.getPosition()+12];
+		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKnight = board[targetKing.getPosition()+8];
+		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKnight = board[targetKing.getPosition()-8];
+		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKnight = board[targetKing.getPosition()-12];
+		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKnight = board[targetKing.getPosition()+19];
+		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKnight = board[targetKing.getPosition()-21];
+		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean kingChecks(AbstractPiece targetKing){
+		Color oppositeColor = Color.getOpposite(targetKing.getColor());
+		AbstractPiece potentialKing = board[targetKing.getPosition()+9];
+		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKing = board[targetKing.getPosition()+10];
+		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKing = board[targetKing.getPosition()+11];
+		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKing = board[targetKing.getPosition()+1];
+		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKing = board[targetKing.getPosition()-1];
+		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKing = board[targetKing.getPosition()-9];
+		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKing = board[targetKing.getPosition()-10];
+		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+			return true;
+		}
+		potentialKing = board[targetKing.getPosition()-11];
+		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean horizontalVerticalChecks(AbstractPiece targetKing){
+		Color oppositeColor = Color.getOpposite(targetKing.getColor());
+		for (int i = targetKing.getPosition()+10; i < BOARD_SIZE; i+= 10){
+			AbstractPiece potentialRookQueen = board[i];
+			if (potentialRookQueen instanceof InvalidPiece || potentialRookQueen.getColor() == targetKing.getColor()){
+				break;
+			}
+			if ((potentialRookQueen instanceof Rook || potentialRookQueen instanceof Queen) && potentialRookQueen.getColor() == oppositeColor){
+				return true;
+			}
+		}
+		for (int i = targetKing.getPosition()-10; i > 0; i-= 10){
+			AbstractPiece potentialRookQueen = board[i];
+			if (potentialRookQueen instanceof InvalidPiece || potentialRookQueen.getColor() == targetKing.getColor()){
+				break;
+			}
+			if ((potentialRookQueen instanceof Rook || potentialRookQueen instanceof Queen) && potentialRookQueen.getColor() == oppositeColor){
+				return true;
+			}
+		}
+		for (int i = targetKing.getPosition()+1; i < targetKing.getPosition()+8; i++){
+			AbstractPiece potentialRookQueen = board[i];
+			if (potentialRookQueen instanceof InvalidPiece || potentialRookQueen.getColor() == targetKing.getColor()){
+				break;
+			}
+			if ((potentialRookQueen instanceof Rook || potentialRookQueen instanceof Queen) && potentialRookQueen.getColor() == oppositeColor){
+				return true;
+			}
+		}
+		for (int i = targetKing.getPosition()-1; i > targetKing.getPosition()-8; i--){
+			AbstractPiece potentialRookQueen = board[i];
+			if (potentialRookQueen instanceof InvalidPiece || potentialRookQueen.getColor() == targetKing.getColor()){
+				break;
+			}
+			if ((potentialRookQueen instanceof Rook || potentialRookQueen instanceof Queen) && potentialRookQueen.getColor() == oppositeColor){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean diagonalChecks(AbstractPiece targetKing){
+		Color oppositeColor = Color.getOpposite(targetKing.getColor());
+		for (int i = targetKing.getPosition()+11; i < BOARD_SIZE; i+= 11){
+			AbstractPiece potentialBishopQueen = board[i];
+			if (potentialBishopQueen instanceof InvalidPiece || potentialBishopQueen.getColor() == targetKing.getColor()){
+				break;
+			}
+			if ((potentialBishopQueen instanceof Bishop || potentialBishopQueen instanceof Queen) && potentialBishopQueen.getColor() == oppositeColor){
+				return true;
+			}
+		}
+		for (int i = targetKing.getPosition()+9; i < BOARD_SIZE; i+= 9){
+			AbstractPiece potentialRookQueen = board[i];
+			if (potentialRookQueen instanceof InvalidPiece || potentialRookQueen.getColor() == targetKing.getColor()){
+				break;
+			}
+			if ((potentialRookQueen instanceof Bishop || potentialRookQueen instanceof Queen) && potentialRookQueen.getColor() == oppositeColor){
+				return true;
+			}
+		}
+		for (int i = targetKing.getPosition()-11; i > 0; i-= 11){
+			AbstractPiece potentialRookQueen = board[i];
+			if (potentialRookQueen instanceof InvalidPiece || potentialRookQueen.getColor() == targetKing.getColor()){
+				break;
+			}
+			if ((potentialRookQueen instanceof Bishop || potentialRookQueen instanceof Queen) && potentialRookQueen.getColor() == oppositeColor){
+				return true;
+			}
+		}
+		for (int i = targetKing.getPosition()-9; i > 0; i-= 9){
+			AbstractPiece potentialRookQueen = board[i];
+			if (potentialRookQueen instanceof InvalidPiece || potentialRookQueen.getColor() == targetKing.getColor()){
+				break;
+			}
+			if ((potentialRookQueen instanceof Bishop || potentialRookQueen instanceof Queen) && potentialRookQueen.getColor() == oppositeColor){
+				return true;
+			}
+		}
+		return false;
 	}
 
 
@@ -229,7 +493,8 @@ public class BoardState {
 			case 24:
 				return new Queen(Color.BLACK, position);
 			case 25:
-				return new King(Color.BLACK, position);
+				blackKing = new King(Color.BLACK, position);
+				return blackKing;
 			case 26:
 				return new Bishop(Color.BLACK, position);
 			case 27:
@@ -263,7 +528,8 @@ public class BoardState {
 			case 94:
 				return new Queen(Color.WHITE, position);
 			case 95:
-				return new King(Color.WHITE, position);
+				whiteKing = new King(Color.WHITE, position);
+				return whiteKing;
 			case 96:
 				return new Bishop(Color.WHITE, position);
 			case 97:
