@@ -32,6 +32,10 @@ public class Pawn extends AbstractPiece {
         super.move(move);
     }
 
+    public void setDoubleMove(boolean move){
+        doubleMove = move;
+    }
+
     public boolean isDoubleMoving(){
         return doubleMove;
     }

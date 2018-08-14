@@ -11,6 +11,7 @@ public class BoardState {
 	private static int CHECKMATE_SCORE = 1000;
 
 	private AbstractPiece[] board;
+	private List<Pawn> doubleMovingPawns = new ArrayList<>();
 	private AbstractPiece blackKing;
 	private AbstractPiece whiteKing;
 	private Color currentMove = Color.WHITE;
@@ -65,6 +66,7 @@ public class BoardState {
 				board[i] = king;
 			}
 		}
+		doubleMovingPawns = new ArrayList<>(boardState.doubleMovingPawns);
 	}
 	
 	
@@ -138,16 +140,32 @@ public class BoardState {
 	 * @param move
 	 */
 	public void makeMove(Move move){
+		for (Pawn pawn : doubleMovingPawns){
+			pawn.setDoubleMove(false);
+		}
+		doubleMovingPawns.clear();
 		board[move.getEndPosition()] = board[move.getStartPosition()];
 		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
-		board[move.getEndPosition()].move(move);
+		AbstractPiece piece = board[move.getEndPosition()];
+		piece.move(move);
+		if (piece instanceof Pawn && ((Pawn)piece).isDoubleMoving()){
+			doubleMovingPawns.add((Pawn)piece);
+		}
 		currentMove = Color.getOpposite(currentMove);
 	}
 
 	public void makeMove(Move move, boolean swapMove){
+		for (Pawn pawn : doubleMovingPawns){
+			pawn.setDoubleMove(false);
+		}
+		doubleMovingPawns.clear();
 		board[move.getEndPosition()] = board[move.getStartPosition()];
 		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
-		board[move.getEndPosition()].move(move);
+		AbstractPiece piece = board[move.getEndPosition()];
+		piece.move(move);
+		if (piece instanceof Pawn && ((Pawn)piece).isDoubleMoving()){
+			doubleMovingPawns.add((Pawn)piece);
+		}
 		if (swapMove){
 			currentMove = Color.getOpposite(currentMove);
 		}
@@ -499,15 +517,15 @@ public class BoardState {
 			}
 			//rest is en passant rules
 			else if (fromPiece.getPosition() + 9 * offset == toPiece.getPosition()){
-				AbstractPiece potentialPawn = board[fromPiece.getPosition()-1];
+				AbstractPiece potentialPawn = board[fromPiece.getPosition() - offset];
 				if (potentialPawn instanceof Pawn){
-					return ((Pawn) potentialPawn).isDoubleMoving() && fromPiece.getColor() == Color.getOpposite(toPiece.getColor());
+					return (doubleMovingPawns.contains(potentialPawn) && fromPiece.getColor() == Color.getOpposite(potentialPawn.getColor()));
 				}
 			}
 			else if (fromPiece.getPosition() + 11 * offset == toPiece.getPosition()){
-				AbstractPiece potentialPawn = board[fromPiece.getPosition()+1];
+				AbstractPiece potentialPawn = board[fromPiece.getPosition()+ offset];
 				if (potentialPawn instanceof Pawn){
-					return ((Pawn) potentialPawn).isDoubleMoving() && fromPiece.getColor() == Color.getOpposite(toPiece.getColor());
+					return (doubleMovingPawns.contains(potentialPawn) && fromPiece.getColor() == Color.getOpposite(potentialPawn.getColor()));
 				}
 			}
 		}
