@@ -1,5 +1,6 @@
 package engine;
 
+import application.CheckmateException;
 import board.BoardState;
 import pieces.Color;
 import pieces.Move;
@@ -22,7 +23,7 @@ public class ChessEngine {
         Move bestMove = null;
 
         if (validMoves.size() == 0){
-            throw new RuntimeException("No valid moves, checkmate");
+            throw new CheckmateException("No valid moves, checkmate");
         }
 
         if (validMoves.size() == 1){
@@ -37,6 +38,11 @@ public class ChessEngine {
                 bestScore = score;
                 bestMove = move;
             }
+        }
+
+        //when it's going to be checkmated no matter what it gets mad and doesn't want to make a move lol
+        if (bestMove == null){
+            return validMoves.get(0);
         }
 
         return bestMove;

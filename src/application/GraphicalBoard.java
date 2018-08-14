@@ -90,6 +90,13 @@ public class GraphicalBoard {
         gui.add(chessBoard);
 
         // create the chess board squares
+        setSquares();
+
+        fillChessBoard();
+    }
+
+
+    private void setSquares(){
         Insets buttonMargin = new Insets(0,0,0,0);
         for (int ii = 0; ii < chessBoardSquares.length; ii++) {
             for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
@@ -111,8 +118,6 @@ public class GraphicalBoard {
                 chessBoardSquares[jj][ii] = b;
             }
         }
-
-        fillChessBoard();
     }
 
 
@@ -361,18 +366,30 @@ public class GraphicalBoard {
             button.setBackground(button.getColor());
         }
         lastComputerMove.clear();
-        Move move = engine.getBestMove(boardState);
-        ButtonPiece fromPiece = getButtonFromBoardStatePosition(move.getStartPosition());
-        ButtonPiece toPiece = getButtonFromBoardStatePosition(move.getEndPosition());
-        movePiece(toPiece, fromPiece);
-        toPiece.setBackground(Color.YELLOW);
-        fromPiece.setBackground(Color.YELLOW);
-        lastComputerMove.add(toPiece);
-        lastComputerMove.add(fromPiece);
+        try{
+            Move move = engine.getBestMove(boardState);
+            ButtonPiece fromPiece = getButtonFromBoardStatePosition(move.getStartPosition());
+            ButtonPiece toPiece = getButtonFromBoardStatePosition(move.getEndPosition());
+            movePiece(toPiece, fromPiece);
+            toPiece.setBackground(Color.YELLOW);
+            fromPiece.setBackground(Color.YELLOW);
+            lastComputerMove.add(toPiece);
+            lastComputerMove.add(fromPiece);
+        }
+        catch(CheckmateException e){
+            System.out.println(e.getMessage());
+            showWinner(PLAYER_COLOR);
+        }
         if (boardState.getAllValidMoves(PLAYER_COLOR).size() == 0){
-            throw new RuntimeException("No valid moves, checkmate");
+            showWinner(pieces.Color.getOpposite(PLAYER_COLOR));
         }
         waitingForComputer = false;
+    }
+
+    private void showWinner(pieces.Color color){
+        JOptionPane.showMessageDialog(null, "Checkmate, " + color + " wins!");
+        boardState = new BoardState();
+        setSquares();
     }
 
     private class BoardButtonListener implements ActionListener {
