@@ -54,6 +54,17 @@ public abstract class AbstractPiece {
 
 	public abstract List<Move> getMoves(BoardState boardState);
 
+	public List<Move> getAllValidMoves(BoardState boardState){
+		List<Move> validMoves = new ArrayList<>();
+		List<Move> moves = getMoves(boardState);
+		for (Move move : moves){
+			if (boardState.isMoveValid(move)){
+				validMoves.add(move);
+			}
+		}
+		return validMoves;
+	}
+
 	protected List<Move> getHorizontalVerticalMoves(BoardState boardState){
 		List<Move> moves = new ArrayList<>();
 		moves.addAll(addMovesGreaterThan(boardState, position+10, BoardState.BOARD_SIZE, 10));

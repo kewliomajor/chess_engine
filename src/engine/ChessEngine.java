@@ -18,17 +18,21 @@ public class ChessEngine {
     public Move getBestMove(BoardState boardState){
         System.out.println("selecting best move for " + boardState.getCurrentMoveColor());
         List<Move> validMoves = boardState.getAllValidMoves(engineColor);
-        double bestScore = -1000;
+        double bestScore = -10000;
         Move bestMove = null;
 
         if (validMoves.size() == 0){
             throw new RuntimeException("No valid moves, checkmate");
         }
 
+        if (validMoves.size() == 1){
+            return validMoves.get(0);
+        }
+
         for (Move move : validMoves) {
             BoardState afterMoveBoard = new BoardState(boardState);
             afterMoveBoard.makeMove(move);
-            double score = -alphaBetaMax(afterMoveBoard, -1000, +1000, 2);
+            double score = -alphaBetaMax(afterMoveBoard, -10000, +10000, 2);
             if (score > bestScore){
                 bestScore = score;
                 bestMove = move;

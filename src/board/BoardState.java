@@ -8,6 +8,7 @@ import java.util.List;
 public class BoardState {
 
 	public static int BOARD_SIZE = 120;
+	private static int CHECKMATE_SCORE = 1000;
 
 	private AbstractPiece[] board;
 	private AbstractPiece blackKing;
@@ -85,11 +86,28 @@ public class BoardState {
 
 
 	public double getBoardScore(){
+		List<Move> allWhiteMoves = new ArrayList<>();
+		List<Move> allBlackMoves = new ArrayList<>();
+		boolean whiteHasMoves = false;
+		boolean blackHasMoves = false;
 		double boardScore = 0;
 		for (int i = 0; i < BOARD_SIZE; i++){
 			if (board[i] instanceof InvalidPiece || board[i] instanceof EmptyPiece){
 				continue;
 			}
+
+			AbstractPiece piece = board[i];
+			if (!whiteHasMoves && piece.getColor() == Color.WHITE){
+				if (piece.getAllValidMoves(this).size() > 0){
+					whiteHasMoves = true;
+				}
+			}
+			else if (!blackHasMoves && piece.getColor() == Color.BLACK){
+				if (piece.getAllValidMoves(this).size() > 0){
+					blackHasMoves = true;
+				}
+			}
+
 			int offset = 1;
 			if (board[i].getColor() != currentMove){
 				offset = -1;
@@ -97,6 +115,19 @@ public class BoardState {
 			int score = board[i].getBaseValue() * offset;
 			boardScore += score;
 		}
+		if (!whiteHasMoves){
+			if (currentMove == Color.WHITE){
+				return -CHECKMATE_SCORE;
+			}
+			return CHECKMATE_SCORE;
+		}
+		else if (!blackHasMoves){
+			if (currentMove == Color.BLACK){
+				return -CHECKMATE_SCORE;
+			}
+			return CHECKMATE_SCORE;
+		}
+
 		return boardScore;
 	}
 
@@ -464,7 +495,6 @@ public class BoardState {
 		//capturing
 		else{
 			if (fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
-				System.out.println("move is valid " + fromPiece.getPosition() + " to " + toPiece.getPosition());
 				return true;
 			}
 			//rest is en passant rules

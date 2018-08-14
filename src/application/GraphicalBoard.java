@@ -299,7 +299,6 @@ public class GraphicalBoard {
         button.setPiece(fromButton.getPiece());
         button.setIcon(currentIcon);
         fromButton.setPiece(emptyPiece);
-        System.out.println("old position set to empty piece at position " + emptyPiece.getPosition());
     }
 
     private void selectPiece(ButtonPiece button){
@@ -370,6 +369,9 @@ public class GraphicalBoard {
         fromPiece.setBackground(Color.YELLOW);
         lastComputerMove.add(toPiece);
         lastComputerMove.add(fromPiece);
+        if (boardState.getAllValidMoves(PLAYER_COLOR).size() == 0){
+            throw new RuntimeException("No valid moves, checkmate");
+        }
         waitingForComputer = false;
     }
 
