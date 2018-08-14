@@ -17,7 +17,7 @@ public class ChessEngine {
 
     public Move getBestMove(BoardState boardState){
         System.out.println("selecting best move for " + boardState.getCurrentMoveColor());
-        List<Move> validMoves = boardState.getAllValidMoves(boardState.getCurrentMoveColor());
+        List<Move> validMoves = boardState.getAllValidMoves(engineColor);
         double bestScore = -1000;
         Move bestMove = null;
 
@@ -28,7 +28,7 @@ public class ChessEngine {
         for (Move move : validMoves) {
             BoardState afterMoveBoard = new BoardState(boardState);
             afterMoveBoard.makeMove(move);
-            double score = alphaBetaMax(afterMoveBoard, -1000, +1000, 1);
+            double score = -alphaBetaMax(afterMoveBoard, -1000, +1000, 2);
             if (score > bestScore){
                 bestScore = score;
                 bestMove = move;

@@ -268,7 +268,7 @@ public class GraphicalBoard {
             ButtonPiece futureRook = getButtonFromBoardStatePosition(futureRookPosition);
             rookEmptyPiece = new EmptyPiece(rookPosition);
             ImageIcon emptyIcon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
-            boardState.makeMove(new Move(rookPosition, futureRookPosition));
+            boardState.makeMove(new Move(rookPosition, futureRookPosition), false);
             futureRook.setPiece(rook.getPiece());
             futureRook.setIcon(rook.getIcon());
             rook.setPiece(rookEmptyPiece);

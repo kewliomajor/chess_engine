@@ -110,9 +110,16 @@ public class BoardState {
 		board[move.getEndPosition()] = board[move.getStartPosition()];
 		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
 		board[move.getEndPosition()].move(move);
-		System.out.println("current move is for " + currentMove);
 		currentMove = Color.getOpposite(currentMove);
-		System.out.println("current move has been changed to " + currentMove);
+	}
+
+	public void makeMove(Move move, boolean swapMove){
+		board[move.getEndPosition()] = board[move.getStartPosition()];
+		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
+		board[move.getEndPosition()].move(move);
+		if (swapMove){
+			currentMove = Color.getOpposite(currentMove);
+		}
 	}
 
 
