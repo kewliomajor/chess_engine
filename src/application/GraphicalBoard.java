@@ -325,6 +325,7 @@ public class GraphicalBoard {
         for (Move move : moves){
             if (boardState.isMoveValid(move)){
                 ButtonPiece button = getButtonFromBoardStatePosition(move.getEndPosition());
+                System.out.println("setting button to green at " + move.getEndPosition());
                 button.setBackground(Color.GREEN);
                 currentValidMoves.add(button);
             }

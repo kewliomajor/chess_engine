@@ -30,13 +30,15 @@ public class King extends AbstractPiece {
         moves.add(new Move(position, position - 10));
         moves.add(new Move(position, position - 11));
         //castling
-        AbstractPiece piece = boardState.getBoard()[position + 3];
-        if (!hasMoved && !piece.hasMoved() && piece instanceof Rook){
-            moves.add(new Move(position, position + 2));
-        }
-        piece = boardState.getBoard()[position - 4];
-        if (!hasMoved && !piece.hasMoved() && piece instanceof Rook){
-            moves.add(new Move(position, position - 2));
+        if (!boardState.kingInCheck(color)){
+            AbstractPiece piece = boardState.getBoard()[position + 3];
+            if (!hasMoved && !piece.hasMoved() && piece instanceof Rook){
+                moves.add(new Move(position, position + 2));
+            }
+            piece = boardState.getBoard()[position - 4];
+            if (!hasMoved && !piece.hasMoved() && piece instanceof Rook){
+                moves.add(new Move(position, position - 2));
+            }
         }
         return moves;
     }
