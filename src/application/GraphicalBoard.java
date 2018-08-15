@@ -29,12 +29,14 @@ public class GraphicalBoard {
     private ButtonPiece[][] chessBoardSquares = new ButtonPiece[8][8];
     private JPanel chessBoard;
     private static final String COLS = "ABCDEFGH";
+    private static final String EVAL_STRING = "Current Evaluation: ";
     private ButtonPiece currentlySelected;
     private ArrayList<ButtonPiece> currentValidMoves = new ArrayList<>();
     private ArrayList<ButtonPiece> lastComputerMove = new ArrayList<>();
     private BoardState boardState = new BoardState();
     private ChessEngine engine;
     private boolean waitingForComputer = false;
+    private JLabel currentEval = new JLabel(EVAL_STRING, SwingConstants.LEFT);
 
 
     private static final int SIZE = 64;
@@ -74,8 +76,11 @@ public class GraphicalBoard {
 
     public final void initializeGui() {
         // set up the main GUI
+        gui.removeAll();
         initMetadata();
         refreshGui();
+        gui.revalidate();
+        gui.repaint();
     }
 
     public void refreshGui(){
@@ -93,6 +98,26 @@ public class GraphicalBoard {
         setSquares();
 
         fillChessBoard();
+    }
+
+    private void initMetadata(){
+        gui.setBorder(new EmptyBorder(5, 5, 5, 5));
+        JToolBar tools = new JToolBar();
+        tools.setFloatable(false);
+        gui.add(tools, BorderLayout.PAGE_START);
+        JButton newButton = new JButton("New");
+        JButton resignButton = new JButton("Resign");
+        newButton.addActionListener(new NewGameListener());
+        resignButton.addActionListener(new ResignListener());
+        tools.add(newButton);
+        tools.add(new JButton("Save")); // TODO - add functionality!
+        tools.add(new JButton("Restore")); // TODO - add functionality!
+        tools.addSeparator();
+        tools.add(resignButton);
+        tools.addSeparator();
+        tools.add(currentEval);
+
+        gui.add(new JLabel("?"), BorderLayout.LINE_START);
     }
 
 
@@ -135,29 +160,12 @@ public class GraphicalBoard {
     }
 
 
-    private void initMetadata(){
-        gui.setBorder(new EmptyBorder(5, 5, 5, 5));
-        JToolBar tools = new JToolBar();
-        tools.setFloatable(false);
-        gui.add(tools, BorderLayout.PAGE_START);
-        tools.add(new JButton("New")); // TODO - add functionality!
-        tools.add(new JButton("Save")); // TODO - add functionality!
-        tools.add(new JButton("Restore")); // TODO - add functionality!
-        tools.addSeparator();
-        tools.add(new JButton("Resign")); // TODO - add functionality!
-
-        gui.add(new JLabel("?"), BorderLayout.LINE_START);
-    }
-
-
     private void fillChessBoard(){
         //fill the chess board
         chessBoard.add(new JLabel(""));
         // fill the top row
         for (int ii = 0; ii < 8; ii++) {
-            chessBoard.add(
-                    new JLabel(COLS.substring(ii, ii + 1),
-                            SwingConstants.CENTER));
+            chessBoard.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
         }
 
         // fill the black non-pawn piece row
@@ -165,8 +173,7 @@ public class GraphicalBoard {
             for (int jj = 0; jj < 8; jj++) {
                 switch (jj) {
                     case 0:
-                        chessBoard.add(new JLabel("" + (ii + 1),
-                                SwingConstants.CENTER));
+                        chessBoard.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
                     default:
                         chessBoard.add(chessBoardSquares[jj][ii]);
                 }
@@ -182,7 +189,7 @@ public class GraphicalBoard {
         }
 
         if (piece instanceof EmptyPiece){
-            image = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+            image = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
         }
         else if (piece instanceof InvalidPiece){
             throw new RuntimeException("shouldn't have an invalid piece at a valid board position");
@@ -358,6 +365,7 @@ public class GraphicalBoard {
     }
 
     private void makeEngineMove(){
+        updateEvaluation();
         for (ButtonPiece button : lastComputerMove){
             button.setBackground(button.getColor());
         }
@@ -387,16 +395,29 @@ public class GraphicalBoard {
             }
         }
         waitingForComputer = false;
+        updateEvaluation();
     }
 
     private void showWinner(pieces.Color color){
-        JOptionPane.showMessageDialog(null, "Checkmate, " + color + " wins!");
+        JOptionPane.showMessageDialog(null, color + " wins!");
         boardState = new BoardState();
-        setSquares();
+        initializeGui();
     }
 
     private void showDraw(){
         JOptionPane.showMessageDialog(null, "Draw!");
+        boardState = new BoardState();
+        initializeGui();
+    }
+
+    private void updateEvaluation(){
+        double score = boardState.getBoardScore();
+        JToolBar toolBar = (JToolBar) gui.getComponent(0);
+        toolBar.remove(6);
+        currentEval = new JLabel(EVAL_STRING + score, SwingConstants.LEFT);
+        toolBar.add(currentEval);
+        gui.revalidate();
+        gui.repaint();
     }
 
     private class BoardButtonListener implements ActionListener {
@@ -420,6 +441,23 @@ public class GraphicalBoard {
             else{
                 selectPiece(button);
             }
+        }
+    }
+
+    private class NewGameListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            boardState = new BoardState();
+            initializeGui();
+        }
+    }
+
+    private class ResignListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            showWinner(pieces.Color.getOpposite(PLAYER_COLOR));
         }
     }
 }
