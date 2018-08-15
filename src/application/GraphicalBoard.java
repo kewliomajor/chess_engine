@@ -377,11 +377,18 @@ public class GraphicalBoard {
             lastComputerMove.add(fromPiece);
         }
         catch(CheckmateException e){
-            System.out.println(e.getMessage());
             showWinner(PLAYER_COLOR);
         }
+        catch(StalemateException e){
+            showDraw();
+        }
         if (boardState.getAllValidMoves(PLAYER_COLOR).size() == 0){
-            showWinner(pieces.Color.getOpposite(PLAYER_COLOR));
+            if (boardState.kingInCheck(PLAYER_COLOR)){
+                showWinner(pieces.Color.getOpposite(PLAYER_COLOR));
+            }
+            else{
+                showDraw();
+            }
         }
         waitingForComputer = false;
     }
@@ -390,6 +397,10 @@ public class GraphicalBoard {
         JOptionPane.showMessageDialog(null, "Checkmate, " + color + " wins!");
         boardState = new BoardState();
         setSquares();
+    }
+
+    private void showDraw(){
+        JOptionPane.showMessageDialog(null, "Draw!");
     }
 
     private class BoardButtonListener implements ActionListener {

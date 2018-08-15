@@ -1,6 +1,7 @@
 package engine;
 
 import application.CheckmateException;
+import application.StalemateException;
 import board.BoardState;
 import pieces.Color;
 import pieces.Move;
@@ -23,7 +24,12 @@ public class ChessEngine {
         Move bestMove = null;
 
         if (validMoves.size() == 0){
-            throw new CheckmateException("No valid moves, checkmate");
+            if (boardState.kingInCheck(engineColor)){
+                throw new CheckmateException("No valid moves, King in check: checkmate");
+            }
+            else{
+                throw new StalemateException("No valid moves, King not in check: stalemate");
+            }
         }
 
         if (validMoves.size() == 1){
