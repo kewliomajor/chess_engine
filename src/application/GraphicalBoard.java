@@ -303,12 +303,17 @@ public class GraphicalBoard {
         System.out.println("making move from " + startPosition + " to " + endPosition);
         boardState.makeMove(new Move(startPosition, endPosition));
         ImageIcon currentIcon = (ImageIcon)fromButton.getIcon();
+        AbstractPiece currentPiece = fromButton.getPiece();
+        if (boardState.getBoard()[endPosition] instanceof Queen){
+            currentIcon = getPieceIcon(boardState.getBoard()[endPosition]);
+            currentPiece = boardState.getBoard()[endPosition];
+        }
         if (isColorPiece(source, pieces.Color.getOpposite(fromButton.getPiece().getColor()))){
             icon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
         }
         fromButton.setIcon(icon);
         fromButton.setBackground(fromButton.getColor());
-        button.setPiece(fromButton.getPiece());
+        button.setPiece(currentPiece);
         button.setIcon(currentIcon);
         fromButton.setPiece(emptyPiece);
     }

@@ -162,10 +162,49 @@ public class BoardState {
 		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
 		AbstractPiece piece = board[move.getEndPosition()];
 		piece.move(move);
-		if (piece instanceof Pawn && ((Pawn)piece).isDoubleMoving()){
-			doubleMovingPawns.add((Pawn)piece);
+		if (piece instanceof Pawn){
+			if (((Pawn)piece).isDoubleMoving()){
+				doubleMovingPawns.add((Pawn)piece);
+			}
+			if (pawnQueening((Pawn)piece)){
+				board[piece.getPosition()] = new Queen(piece.getColor(), piece.getPosition());
+			}
 		}
 		moveHistory.add(move);
+	}
+
+
+	private boolean pawnQueening(Pawn pawn){
+		if (pawn.getColor() == Color.BLACK){
+			switch(pawn.getPosition()){
+				case 91:
+				case 92:
+				case 93:
+				case 94:
+				case 95:
+				case 96:
+				case 97:
+				case 98:
+					return true;
+			}
+		}
+		else if (pawn.getColor() == Color.WHITE){
+			switch(pawn.getPosition()){
+				case 21:
+				case 22:
+				case 23:
+				case 24:
+				case 25:
+				case 26:
+				case 27:
+				case 28:
+					return true;
+			}
+		}
+		else{
+			throw new RuntimeException("Pawn has an invalid color " + pawn.getColor());
+		}
+		return false;
 	}
 
 
