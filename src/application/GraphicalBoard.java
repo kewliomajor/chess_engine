@@ -341,24 +341,20 @@ public class GraphicalBoard {
         if (color == pieces.Color.WHITE){
             offset = 1;
         }
-        if (source.equals(SPRITES.get(10 + offset).getSource())){
-            return true;
+        List<Integer> possiblePositions = new ArrayList<Integer>() {{
+            add(10);
+            add(8);
+            add(6);
+            add(4);
+            add(2);
+            add(0);
+        }};
+        for (Integer pos : possiblePositions){
+            if (source.equals(SPRITES.get(pos + offset).getSource())){
+                return true;
+            }
         }
-        else if (source.equals(SPRITES.get(8 + offset).getSource())){
-            return true;
-        }
-        else if (source.equals(SPRITES.get(6 + offset).getSource())){
-            return true;
-        }
-        else if (source.equals(SPRITES.get(4 + offset).getSource())){
-            return true;
-        }
-        else if (source.equals(SPRITES.get(2 + offset).getSource())){
-            return true;
-        }
-        else {
-            return source.equals(SPRITES.get(offset).getSource());
-        }
+        return false;
     }
 
     private void makeEngineMove(){
@@ -419,7 +415,6 @@ public class GraphicalBoard {
                     System.out.println(boardState.toString() + "\n\n");
                     waitingForComputer = true;
                     makeEngineMove();
-                    //System.out.println(guiToString() + "\n\n");
                 }
             }
             else{

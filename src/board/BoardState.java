@@ -7,20 +7,23 @@ import java.util.List;
 
 public class BoardState {
 
-	public static int BOARD_SIZE = 120;
-	private static int CHECKMATE_SCORE = 1000;
+	public static final int BOARD_SIZE = 120;
+	private static final int CHECKMATE_SCORE = 1000;
 
 	private AbstractPiece[] board;
 	private List<Pawn> doubleMovingPawns = new ArrayList<>();
 	private AbstractPiece blackKing;
 	private AbstractPiece whiteKing;
 	private Color currentMove = Color.WHITE;
+
+	private List<Move> moveHistory;
 	
 	/**
 	 * Creates a board with all pieces in the starting formation
 	 */
 	public BoardState(){
 		board = new AbstractPiece[BOARD_SIZE];
+		moveHistory = new ArrayList<>();
 		setupStartingPieces();
 	}
 
@@ -67,6 +70,7 @@ public class BoardState {
 			}
 		}
 		doubleMovingPawns = new ArrayList<>(boardState.doubleMovingPawns);
+		moveHistory = new ArrayList<>(boardState.moveHistory);
 	}
 	
 	
@@ -88,8 +92,6 @@ public class BoardState {
 
 
 	public double getBoardScore(){
-		List<Move> allWhiteMoves = new ArrayList<>();
-		List<Move> allBlackMoves = new ArrayList<>();
 		boolean whiteHasMoves = false;
 		boolean blackHasMoves = false;
 		double boardScore = 0;
@@ -140,21 +142,18 @@ public class BoardState {
 	 * @param move
 	 */
 	public void makeMove(Move move){
-		for (Pawn pawn : doubleMovingPawns){
-			pawn.setDoubleMove(false);
-		}
-		doubleMovingPawns.clear();
-		board[move.getEndPosition()] = board[move.getStartPosition()];
-		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
-		AbstractPiece piece = board[move.getEndPosition()];
-		piece.move(move);
-		if (piece instanceof Pawn && ((Pawn)piece).isDoubleMoving()){
-			doubleMovingPawns.add((Pawn)piece);
-		}
+		move(move);
 		currentMove = Color.getOpposite(currentMove);
 	}
 
 	public void makeMove(Move move, boolean swapMove){
+		move(move);
+		if (swapMove){
+			currentMove = Color.getOpposite(currentMove);
+		}
+	}
+
+	public void move(Move move){
 		for (Pawn pawn : doubleMovingPawns){
 			pawn.setDoubleMove(false);
 		}
@@ -166,9 +165,7 @@ public class BoardState {
 		if (piece instanceof Pawn && ((Pawn)piece).isDoubleMoving()){
 			doubleMovingPawns.add((Pawn)piece);
 		}
-		if (swapMove){
-			currentMove = Color.getOpposite(currentMove);
-		}
+		moveHistory.add(move);
 	}
 
 
@@ -199,7 +196,17 @@ public class BoardState {
 			return false;
 		}
 		//now the actual logic for individual pieces
-		else if (fromPiece instanceof Pawn){
+		if (!isSpecificPieceMoveValid(fromPiece, toPiece)){
+			return false;
+		}
+
+		BoardState afterMoveBoard = new BoardState(this);
+		afterMoveBoard.makeMove(move);
+		return !afterMoveBoard.kingInCheck(fromPiece.getColor());
+	}
+
+	private boolean isSpecificPieceMoveValid(AbstractPiece fromPiece, AbstractPiece toPiece){
+		if (fromPiece instanceof Pawn){
 			if (!isPawnMoveValid((Pawn)fromPiece, toPiece)){
 				return false;
 			}
@@ -232,10 +239,7 @@ public class BoardState {
 		else{
 			throw new RuntimeException("Piece is not any known type: " + fromPiece.getClass());
 		}
-
-		BoardState afterMoveBoard = new BoardState(this);
-		afterMoveBoard.makeMove(move);
-		return !afterMoveBoard.kingInCheck(fromPiece.getColor());
+		return true;
 	}
 
 
@@ -290,37 +294,21 @@ public class BoardState {
 
 	private boolean knightChecks(AbstractPiece targetKing){
 		Color oppositeColor = Color.getOpposite(targetKing.getColor());
-		AbstractPiece potentialKnight = board[targetKing.getPosition()+21];
-		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKnight = board[targetKing.getPosition()+19];
-		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKnight = board[targetKing.getPosition()+12];
-		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKnight = board[targetKing.getPosition()+8];
-		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKnight = board[targetKing.getPosition()-8];
-		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKnight = board[targetKing.getPosition()-12];
-		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKnight = board[targetKing.getPosition()+19];
-		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKnight = board[targetKing.getPosition()-21];
-		if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
-			return true;
+		List<Integer> possiblePositions = new ArrayList<Integer>() {{
+			add(21);
+			add(19);
+			add(12);
+			add(8);
+			add(-8);
+			add(-12);
+			add(-19);
+			add(-21);
+		}};
+		for (Integer pos : possiblePositions){
+			AbstractPiece potentialKnight = board[targetKing.getPosition()+pos];
+			if (potentialKnight instanceof Knight && potentialKnight.getColor() == oppositeColor){
+				return true;
+			}
 		}
 
 		return false;
@@ -328,37 +316,21 @@ public class BoardState {
 
 	private boolean kingChecks(AbstractPiece targetKing){
 		Color oppositeColor = Color.getOpposite(targetKing.getColor());
-		AbstractPiece potentialKing = board[targetKing.getPosition()+9];
-		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKing = board[targetKing.getPosition()+10];
-		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKing = board[targetKing.getPosition()+11];
-		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKing = board[targetKing.getPosition()+1];
-		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKing = board[targetKing.getPosition()-1];
-		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKing = board[targetKing.getPosition()-9];
-		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKing = board[targetKing.getPosition()-10];
-		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
-			return true;
-		}
-		potentialKing = board[targetKing.getPosition()-11];
-		if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
-			return true;
+		List<Integer> possiblePositions = new ArrayList<Integer>() {{
+			add(9);
+			add(10);
+			add(11);
+			add(1);
+			add(-1);
+			add(-9);
+			add(-10);
+			add(-11);
+		}};
+		for (Integer pos : possiblePositions){
+			AbstractPiece potentialKing = board[targetKing.getPosition()+pos];
+			if (potentialKing instanceof King && potentialKing.getColor() == oppositeColor){
+				return true;
+			}
 		}
 
 		return false;
