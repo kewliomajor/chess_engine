@@ -17,4 +17,13 @@ public class Move {
 	public int getEndPosition(){
 		return endPosition;
 	}
+
+	@Override
+	public boolean equals(Object object){
+		if (!(object instanceof Move)){
+			return false;
+		}
+		Move move = (Move)object;
+		return move.getStartPosition() == startPosition && move.getEndPosition() == endPosition;
+	}
 }

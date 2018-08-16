@@ -12,9 +12,14 @@ import java.util.Random;
 public class ChessEngine {
 
     private Color engineColor;
+    private OpeningBook openingBook;
 
     public ChessEngine(Color engineColor){
         this.engineColor = engineColor;
+    }
+
+    public void reBuildOpeningBook(BoardState boardState){
+        this.openingBook = new OpeningBook(boardState);
     }
 
     public void setEngineColor(Color color){
@@ -23,6 +28,16 @@ public class ChessEngine {
 
     public Move getBestMove(BoardState boardState){
         System.out.println("selecting best move for " + boardState.getCurrentMoveColor());
+
+        //check opening book
+        if (openingBook == null){
+            throw new RuntimeException("No opening book has been created");
+        }
+        Move bookMove = openingBook.getNextMove(boardState.getMoveHistory());
+        if (bookMove != null){
+            return bookMove;
+        }
+
         List<Move> validMoves = boardState.getAllValidMoves(engineColor);
         double bestScore = -10000;
         Move bestMove = null;

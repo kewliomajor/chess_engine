@@ -81,6 +81,7 @@ public class GraphicalBoard {
         refreshGui();
         gui.revalidate();
         gui.repaint();
+        engine.reBuildOpeningBook(boardState);
         if (PLAYER_COLOR == pieces.Color.BLACK){
             makeEngineMove();
         }

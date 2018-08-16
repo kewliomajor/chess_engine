@@ -15,7 +15,7 @@ public class BoardState {
 	private AbstractPiece blackKing;
 	private AbstractPiece whiteKing;
 	private Color currentMove = Color.WHITE;
-	private Color playerColor = Color.WHITE;
+	private Color playerColor;
 
 	private List<Move> moveHistory;
 	
@@ -89,12 +89,25 @@ public class BoardState {
 	}
 
 
+	public List<Move> getMoveHistory(){
+		return moveHistory;
+	}
+
+
 	public Color getCurrentMoveColor(){
 		return currentMove;
 	}
 
 	public Color getPlayerColor(){
 		return playerColor;
+	}
+
+	public King getWhiteKing(){
+		return (King)whiteKing;
+	}
+
+	public King getBlackKing(){
+		return (King)blackKing;
 	}
 
 
