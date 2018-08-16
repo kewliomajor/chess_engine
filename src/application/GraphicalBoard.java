@@ -274,12 +274,16 @@ public class GraphicalBoard {
             EmptyPiece rookEmptyPiece;
             int rookPosition;
             int futureRookPosition;
+            int offset = 0;
+            if (PLAYER_COLOR == pieces.Color.BLACK){
+                offset = 1;
+            }
             if (startPosition + 2 == endPosition){
-                rookPosition = startPosition+3;
+                rookPosition = startPosition+3 + offset;
                 futureRookPosition = startPosition+1;
             }
             else{
-                rookPosition = startPosition-4;
+                rookPosition = startPosition-4 + offset;
                 futureRookPosition = startPosition-1;
             }
             ButtonPiece rook = getButtonFromBoardStatePosition(rookPosition);
