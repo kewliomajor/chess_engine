@@ -24,7 +24,7 @@ import java.util.List;
 
 public class GraphicalBoard {
 
-    private static final pieces.Color PLAYER_COLOR = pieces.Color.WHITE;
+    private static pieces.Color PLAYER_COLOR = pieces.Color.WHITE;
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
     private ButtonPiece[][] chessBoardSquares = new ButtonPiece[8][8];
     private JPanel chessBoard;
@@ -33,7 +33,7 @@ public class GraphicalBoard {
     private ButtonPiece currentlySelected;
     private ArrayList<ButtonPiece> currentValidMoves = new ArrayList<>();
     private ArrayList<ButtonPiece> lastComputerMove = new ArrayList<>();
-    private BoardState boardState = new BoardState();
+    private BoardState boardState = new BoardState(PLAYER_COLOR);
     private ChessEngine engine;
     private boolean waitingForComputer = false;
     private JLabel currentEval = new JLabel(EVAL_STRING, SwingConstants.LEFT);
@@ -81,6 +81,9 @@ public class GraphicalBoard {
         refreshGui();
         gui.revalidate();
         gui.repaint();
+        if (PLAYER_COLOR == pieces.Color.BLACK){
+            makeEngineMove();
+        }
     }
 
     public void refreshGui(){
@@ -107,13 +110,16 @@ public class GraphicalBoard {
         gui.add(tools, BorderLayout.PAGE_START);
         JButton newButton = new JButton("New");
         JButton resignButton = new JButton("Resign");
+        JButton swapColorButton = new JButton("Swap Color");
         newButton.addActionListener(new NewGameListener());
         resignButton.addActionListener(new ResignListener());
+        swapColorButton.addActionListener(new SwapColorListener());
         tools.add(newButton);
         tools.add(new JButton("Save")); // TODO - add functionality!
         tools.add(new JButton("Restore")); // TODO - add functionality!
         tools.addSeparator();
         tools.add(resignButton);
+        tools.add(swapColorButton);
         tools.addSeparator();
         tools.add(currentEval);
 
@@ -339,9 +345,10 @@ public class GraphicalBoard {
         List<Move> moves = piece.getMoves(boardState);
         System.out.println("number of possible moves: " + moves.size());
         for (Move move : moves){
+            //System.out.println("checking move validity " + move.getStartPosition() + " to " +move.getEndPosition());
             if (boardState.isMoveValid(move)){
                 ButtonPiece button = getButtonFromBoardStatePosition(move.getEndPosition());
-                System.out.println("setting button to green at " + move.getEndPosition());
+                //System.out.println("setting button to green at " + move.getEndPosition());
                 button.setBackground(Color.GREEN);
                 currentValidMoves.add(button);
             }
@@ -405,20 +412,20 @@ public class GraphicalBoard {
 
     private void showWinner(pieces.Color color){
         JOptionPane.showMessageDialog(null, color + " wins!");
-        boardState = new BoardState();
+        boardState = new BoardState(PLAYER_COLOR);
         initializeGui();
     }
 
     private void showDraw(){
         JOptionPane.showMessageDialog(null, "Draw!");
-        boardState = new BoardState();
+        boardState = new BoardState(PLAYER_COLOR);
         initializeGui();
     }
 
     private void updateEvaluation(){
         double score = boardState.getBoardScore();
         JToolBar toolBar = (JToolBar) gui.getComponent(0);
-        toolBar.remove(6);
+        toolBar.remove(7);
         currentEval = new JLabel(EVAL_STRING + score, SwingConstants.LEFT);
         toolBar.add(currentEval);
         gui.revalidate();
@@ -453,7 +460,7 @@ public class GraphicalBoard {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            boardState = new BoardState();
+            boardState = new BoardState(PLAYER_COLOR);
             initializeGui();
         }
     }
@@ -463,6 +470,16 @@ public class GraphicalBoard {
         @Override
         public void actionPerformed(ActionEvent e) {
             showWinner(pieces.Color.getOpposite(PLAYER_COLOR));
+        }
+    }
+
+    private class SwapColorListener implements  ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            engine.setEngineColor(PLAYER_COLOR);
+            PLAYER_COLOR = pieces.Color.getOpposite(PLAYER_COLOR);
+            boardState = new BoardState(PLAYER_COLOR);
+            initializeGui();
         }
     }
 }

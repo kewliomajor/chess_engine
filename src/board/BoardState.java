@@ -15,16 +15,18 @@ public class BoardState {
 	private AbstractPiece blackKing;
 	private AbstractPiece whiteKing;
 	private Color currentMove = Color.WHITE;
+	private Color playerColor = Color.WHITE;
 
 	private List<Move> moveHistory;
 	
 	/**
 	 * Creates a board with all pieces in the starting formation
 	 */
-	public BoardState(){
+	public BoardState(Color playerColor){
 		board = new AbstractPiece[BOARD_SIZE];
 		moveHistory = new ArrayList<>();
-		setupStartingPieces();
+		setupStartingPieces(playerColor);
+		this.playerColor = playerColor;
 	}
 
 
@@ -71,6 +73,7 @@ public class BoardState {
 		}
 		doubleMovingPawns = new ArrayList<>(boardState.doubleMovingPawns);
 		moveHistory = new ArrayList<>(boardState.moveHistory);
+		playerColor = boardState.playerColor;
 	}
 	
 	
@@ -88,6 +91,10 @@ public class BoardState {
 
 	public Color getCurrentMoveColor(){
 		return currentMove;
+	}
+
+	public Color getPlayerColor(){
+		return playerColor;
 	}
 
 
@@ -319,6 +326,9 @@ public class BoardState {
 		if (targetKing.getColor() == Color.WHITE){
 			offset = -1;
 		}
+		if (playerColor == Color.BLACK){
+			offset *= -1;
+		}
 		Color oppositeColor = Color.getOpposite(targetKing.getColor());
 		AbstractPiece potentialPawn = board[targetKing.getPosition()+11*offset];
 		if (potentialPawn instanceof Pawn && potentialPawn.getColor() == oppositeColor){
@@ -510,6 +520,9 @@ public class BoardState {
 		if (fromPiece.getColor() == Color.WHITE){
 			offset = -1;
 		}
+		if (playerColor == Color.BLACK){
+			offset *= -1;
+		}
 		//forward one
 		if (fromPiece.getPosition() + 10 * offset == toPiece.getPosition()){
 			return toPiece instanceof EmptyPiece;
@@ -608,11 +621,11 @@ public class BoardState {
 	}
 	
 	
-	private void setupStartingPieces(){
+	private void setupStartingPieces(Color playerColor){
 		for (int i = 0; i < BOARD_SIZE; i++){
 			int digit = i % 10;
 			if (i > 20 && i < 99 && digit != 0 && digit != 9){
-				board[i] = getPieceForPosition(i);
+				board[i] = getPieceForPosition(i, playerColor);
 			}
 			else{
 				board[i] = InvalidPiece.getInstance();				
@@ -620,25 +633,36 @@ public class BoardState {
 		}
 	}
 
-	private AbstractPiece getPieceForPosition(int position){
+	private AbstractPiece getPieceForPosition(int position, Color playerColor){
+		Color engineColor = Color.getOpposite(playerColor);
+		//TODO swap king and queen positions when colors changed
 		switch (position){
 			case 21:
-				return new Rook(Color.BLACK, position);
+				return new Rook(engineColor, position);
 			case 22:
-				return new Knight(Color.BLACK, position);
+				return new Knight(engineColor, position);
 			case 23:
-				return new Bishop(Color.BLACK, position);
+				return new Bishop(engineColor, position);
 			case 24:
-				return new Queen(Color.BLACK, position);
+				if (engineColor == Color.BLACK){
+					return new Queen(engineColor, position);
+				}
+				else{
+					return createKing(engineColor, position);
+				}
 			case 25:
-				blackKing = new King(Color.BLACK, position);
-				return blackKing;
+				if (engineColor == Color.BLACK){
+					return createKing(engineColor, position);
+				}
+				else{
+					return new Queen(engineColor, position);
+				}
 			case 26:
-				return new Bishop(Color.BLACK, position);
+				return new Bishop(engineColor, position);
 			case 27:
-				return new Knight(Color.BLACK, position);
+				return new Knight(engineColor, position);
 			case 28:
-				return new Rook(Color.BLACK, position);
+				return new Rook(engineColor, position);
 			case 31:
 			case 32:
 			case 33:
@@ -647,7 +671,7 @@ public class BoardState {
 			case 36:
 			case 37:
 			case 38:
-				return new Pawn(Color.BLACK, position);
+				return new Pawn(engineColor, position);
 			case 81:
 			case 82:
 			case 83:
@@ -656,26 +680,46 @@ public class BoardState {
 			case 86:
 			case 87:
 			case 88:
-				return new Pawn(Color.WHITE, position);
+				return new Pawn(playerColor, position);
 			case 91:
-				return new Rook(Color.WHITE, position);
+				return new Rook(playerColor, position);
 			case 92:
-				return new Knight(Color.WHITE, position);
+				return new Knight(playerColor, position);
 			case 93:
-				return new Bishop(Color.WHITE, position);
+				return new Bishop(playerColor, position);
 			case 94:
-				return new Queen(Color.WHITE, position);
+				if (playerColor == Color.WHITE){
+					return new Queen(playerColor, position);
+				}
+				else{
+					return createKing(playerColor, position);
+				}
 			case 95:
-				whiteKing = new King(Color.WHITE, position);
-				return whiteKing;
+				if (playerColor == Color.WHITE){
+					return createKing(playerColor, position);
+				}
+				else{
+					return new Queen(playerColor, position);
+				}
 			case 96:
-				return new Bishop(Color.WHITE, position);
+				return new Bishop(playerColor, position);
 			case 97:
-				return new Knight(Color.WHITE, position);
+				return new Knight(playerColor, position);
 			case 98:
-				return new Rook(Color.WHITE, position);
+				return new Rook(playerColor, position);
 			default:
 				return new EmptyPiece(position);
 		}
+	}
+
+	private King createKing(Color color, int position){
+		King king = new King(color, position);
+		if (color == Color.BLACK){
+			blackKing = king;
+		}
+		else{
+			whiteKing = king;
+		}
+		return king;
 	}
 }

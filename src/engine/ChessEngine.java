@@ -17,6 +17,10 @@ public class ChessEngine {
         this.engineColor = engineColor;
     }
 
+    public void setEngineColor(Color color){
+        this.engineColor = color;
+    }
+
     public Move getBestMove(BoardState boardState){
         System.out.println("selecting best move for " + boardState.getCurrentMoveColor());
         List<Move> validMoves = boardState.getAllValidMoves(engineColor);
