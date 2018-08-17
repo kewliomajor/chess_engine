@@ -6,13 +6,14 @@ import board.BoardState;
 import pieces.Color;
 import pieces.Move;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class ChessEngine {
 
     private Color engineColor;
     private OpeningBook openingBook;
+    private List<ComputeThread> runningThreads = new ArrayList<>();
 
     public ChessEngine(Color engineColor){
         this.engineColor = engineColor;
@@ -58,12 +59,24 @@ public class ChessEngine {
         for (Move move : validMoves) {
             BoardState afterMoveBoard = new BoardState(boardState);
             afterMoveBoard.makeMove(move);
-            double score = -alphaBetaMax(afterMoveBoard, -10000, +10000, 4);
-            if (score > bestScore){
-                bestScore = score;
-                bestMove = move;
+            ComputeThread thread = new ComputeThread(afterMoveBoard, move);
+            runningThreads.add(thread);
+            thread.run();
+        }
+        for (ComputeThread thread : runningThreads){
+            try{
+                thread.join();
+                if (thread.getScore() > bestScore){
+                    bestScore = thread.getScore();
+                    bestMove = thread.getMove();
+                }
+            }
+            catch(InterruptedException e){
+                throw new RuntimeException("Thread interrupted: " + e.getMessage());
             }
         }
+
+        runningThreads.clear();
 
         //when it's going to be checkmated no matter what it gets mad and doesn't want to make a move lol
         if (bestMove == null){
@@ -106,5 +119,30 @@ public class ChessEngine {
                 beta = score; // beta acts like min in MiniMax
         }
         return beta;
+    }
+
+    public class ComputeThread extends Thread {
+
+        private BoardState boardState;
+        private Move move;
+        private double score;
+
+        public ComputeThread(BoardState boardState, Move move){
+            this.boardState = boardState;
+            this.move = move;
+        }
+
+        public void run()
+        {
+            score = -alphaBetaMax(boardState, -10000, +10000, 4);
+        }
+
+        public Move getMove(){
+            return move;
+        }
+
+        public double getScore(){
+            return score;
+        }
     }
 }
