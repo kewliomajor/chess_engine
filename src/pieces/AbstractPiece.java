@@ -7,10 +7,11 @@ import board.BoardState;
 import board.Utils;
 
 public abstract class AbstractPiece {
-	
+
+	protected static final double AVAILABLE_MOVE_SCORE = 0.025;
 	protected final Color color;
 	protected int position;
-	protected int baseValue = 0;
+	protected double baseValue = 0;
 	protected boolean hasMoved = false;
 	
 	
@@ -32,7 +33,7 @@ public abstract class AbstractPiece {
 		return position;
 	}
 
-	public int getBaseValue() {
+	public double getBaseValue() {
 		return baseValue;
 	}
 	

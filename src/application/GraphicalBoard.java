@@ -454,7 +454,7 @@ public class GraphicalBoard {
                     movePiece(button, currentlySelected);
                     currentlySelected = null;
                     clearMoves();
-                    System.out.println(boardState.toString() + "\n\n");
+                    //System.out.println(boardState.toString() + "\n\n");
                     waitingForComputer = true;
                     makeEngineMove();
                 }

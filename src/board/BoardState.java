@@ -135,7 +135,7 @@ public class BoardState {
 			if (board[i].getColor() != currentMove){
 				offset = -1;
 			}
-			int score = board[i].getBaseValue() * offset;
+			double score = board[i].getBaseValue() * offset;
 			boardScore += score;
 		}
 		if (!whiteHasMoves){
@@ -269,33 +269,10 @@ public class BoardState {
 				return false;
 			}
 		}
-		else if (fromPiece instanceof Rook){
-			if (!isBasicMoveValid(fromPiece, toPiece)){
-				return false;
-			}
-		}
-		else if (fromPiece instanceof Knight){
-			if (!isBasicMoveValid(fromPiece, toPiece)){
-				return false;
-			}
-		}
-		else if (fromPiece instanceof Bishop){
-			if (!isBasicMoveValid(fromPiece, toPiece)){
-				return false;
-			}
-		}
-		else if (fromPiece instanceof Queen){
-			if (!isBasicMoveValid(fromPiece, toPiece)){
-				return false;
-			}
-		}
 		else if (fromPiece instanceof King){
 			if (!isKingMoveValid((King)fromPiece, toPiece)){
 				return false;
 			}
-		}
-		else{
-			throw new RuntimeException("Piece is not any known type: " + fromPiece.getClass());
 		}
 		return true;
 	}
