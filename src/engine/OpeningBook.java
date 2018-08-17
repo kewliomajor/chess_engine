@@ -56,6 +56,18 @@ public class OpeningBook extends DefaultTreeModel {
     private void buildBook(){
         root = new  MoveTreeNode(new Move(0, 0));
         insertNodeInto(getKingPawnBookTree(), root, 0);
+        insertNodeInto(getQueenPawnBookTree(), root, 0);
+    }
+
+    private MoveTreeNode getQueenPawnBookTree(){
+        int queenPawnStartPos = whiteKingStartPos+11*offset;
+        MoveTreeNode queenPawnMove = new MoveTreeNode(new Move(queenPawnStartPos, queenPawnStartPos+20*offset));
+
+        //symmetrical
+        MoveTreeNode symmetrical = new MoveTreeNode(new Move(queenPawnStartPos+50*offset, queenPawnStartPos+30*offset));
+        insertNodeInto(symmetrical, queenPawnMove, 0);
+
+        return queenPawnMove;
     }
 
     private MoveTreeNode getKingPawnBookTree(){
@@ -67,7 +79,7 @@ public class OpeningBook extends DefaultTreeModel {
         MoveTreeNode sicilian2 = new MoveTreeNode(new Move(whiteKingStartPos-2*offset, kingPawnStartPos+9*offset));
         insertNodeInto(sicilian, kingPawnMove, 0);
         insertNodeInto(sicilian2, sicilian, 0);
-        
+
         return kingPawnMove;
     }
 }

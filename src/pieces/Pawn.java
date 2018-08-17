@@ -46,6 +46,9 @@ public class Pawn extends AbstractPiece {
         if (color == Color.WHITE){
             offset = -1;
         }
+        if (boardState.getPlayerColor() == Color.BLACK){
+            offset *= -1;
+        }
         List<Move> moves = new ArrayList<>();
         moves.add(new Move(position, position + 10 * offset));
         if (!hasMoved){
