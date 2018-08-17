@@ -58,7 +58,7 @@ public class ChessEngine {
         for (Move move : validMoves) {
             BoardState afterMoveBoard = new BoardState(boardState);
             afterMoveBoard.makeMove(move);
-            double score = -alphaBetaMax(afterMoveBoard, -10000, +10000, 2);
+            double score = -alphaBetaMax(afterMoveBoard, -10000, +10000, 4);
             if (score > bestScore){
                 bestScore = score;
                 bestMove = move;
