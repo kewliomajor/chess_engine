@@ -411,6 +411,10 @@ public class GraphicalBoard {
                 showDraw();
             }
         }
+        System.out.println("history size: " + boardState.getMoveHistory().size());
+        for (Move move : boardState.getMoveHistory()){
+            System.out.println("move " + move.getStartPosition() + " to " + move.getEndPosition());
+        }
         waitingForComputer = false;
         updateEvaluation();
     }

@@ -31,7 +31,6 @@ public class BoardState {
 
 
 	public BoardState(BoardState boardState){
-		//TODO copy the board state
 		currentMove = boardState.getCurrentMoveColor();
 		board = new AbstractPiece[BOARD_SIZE];
 		for (int i = 0; i < BOARD_SIZE; i++){

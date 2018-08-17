@@ -45,8 +45,7 @@ public class OpeningBook extends DefaultTreeModel {
         for (int i = 0; i < node.getChildCount(); i++){
             MoveTreeNode childNode = (MoveTreeNode)node.getChildAt(i);
             if (childNode.getMove().equals(nextMove)){
-                moves.remove(0);
-                return recursiveGetMove(moves, childNode);
+                return recursiveGetMove(moves.subList(1, moves.size()), childNode);
             }
         }
         //there were no matches
@@ -57,6 +56,27 @@ public class OpeningBook extends DefaultTreeModel {
         root = new  MoveTreeNode(new Move(0, 0));
         insertNodeInto(getKingPawnBookTree(), root, 0);
         insertNodeInto(getQueenPawnBookTree(), root, 0);
+        insertNodeInto(getRetiTree(), root, 0);
+        insertNodeInto(getEnglishTree(), root, 0);
+    }
+
+    private MoveTreeNode getKingPawnBookTree(){
+        int kingPawnStartPos = whiteKingStartPos+10*offset;
+        MoveTreeNode kingPawnMove = new MoveTreeNode(new Move(kingPawnStartPos, kingPawnStartPos+20*offset));
+
+        insertNodeInto(getSicilianBookTree(), kingPawnMove, 0);
+
+        return kingPawnMove;
+    }
+
+    private MoveTreeNode getSicilianBookTree(){
+        MoveTreeNode sicilian = new MoveTreeNode(new Move(whiteKingStartPos+62*offset, whiteKingStartPos+42*offset));
+        MoveTreeNode sicilianNf3 = new MoveTreeNode(new Move(whiteKingStartPos-2*offset, whiteKingStartPos+19*offset));
+        MoveTreeNode sicilianNf3d6 = new MoveTreeNode(new Move(whiteKingStartPos+61*offset, whiteKingStartPos+51*offset));
+        insertNodeInto(sicilianNf3d6, sicilianNf3, 0);
+        insertNodeInto(sicilianNf3, sicilian, 0);
+
+        return sicilian;
     }
 
     private MoveTreeNode getQueenPawnBookTree(){
@@ -70,16 +90,24 @@ public class OpeningBook extends DefaultTreeModel {
         return queenPawnMove;
     }
 
-    private MoveTreeNode getKingPawnBookTree(){
-        int kingPawnStartPos = whiteKingStartPos+10*offset;
-        MoveTreeNode kingPawnMove = new MoveTreeNode(new Move(kingPawnStartPos, kingPawnStartPos+20*offset));
+    private MoveTreeNode getRetiTree(){
+        MoveTreeNode retiKnightMove = new MoveTreeNode(new Move(whiteKingStartPos-2*offset, whiteKingStartPos+19*offset));
 
-        //sicilian
-        MoveTreeNode sicilian = new MoveTreeNode(new Move(kingPawnStartPos+52*offset, kingPawnStartPos+32*offset));
-        MoveTreeNode sicilian2 = new MoveTreeNode(new Move(whiteKingStartPos-2*offset, kingPawnStartPos+9*offset));
-        insertNodeInto(sicilian, kingPawnMove, 0);
-        insertNodeInto(sicilian2, sicilian, 0);
+        //queen pawn
+        MoveTreeNode queenPawn = new MoveTreeNode(new Move(whiteKingStartPos+61*offset, whiteKingStartPos+41*offset));
+        insertNodeInto(queenPawn, retiKnightMove, 0);
 
-        return kingPawnMove;
+        return retiKnightMove;
+    }
+
+    private MoveTreeNode getEnglishTree(){
+        int cPawnStartPos = whiteKingStartPos+12*offset;
+        MoveTreeNode englishMove = new MoveTreeNode(new Move(cPawnStartPos, cPawnStartPos+20*offset));
+
+        //king pawn
+        MoveTreeNode kingPawn = new MoveTreeNode(new Move(cPawnStartPos+48*offset, cPawnStartPos+28*offset));
+        insertNodeInto(kingPawn, englishMove, 0);
+
+        return englishMove;
     }
 }
