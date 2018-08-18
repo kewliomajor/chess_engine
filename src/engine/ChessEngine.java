@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ChessEngine {
 
-    private static final int SEARCH_DEPTH = 4;
+    private static final int SEARCH_DEPTH = 3;
     private Color engineColor;
     private OpeningBook openingBook;
     private List<ComputeThread> runningThreads = new ArrayList<>();
@@ -202,7 +202,12 @@ public class ChessEngine {
         }
 
         public void run(){
-            this.bestResponse = computeBestMove(boardState, runningThreads, maxDepth);
+            try{
+                this.bestResponse = computeBestMove(boardState, runningThreads, maxDepth);
+            }
+            catch(CheckmateException | StalemateException e){
+                //no best response game will be over we dont care
+            }
         }
     }
 }
