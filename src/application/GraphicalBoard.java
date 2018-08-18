@@ -248,6 +248,7 @@ public class GraphicalBoard {
 
     public static void main(String[] args) {
         Runnable r = () -> {
+            Thread.currentThread().setPriority(10);
             GraphicalBoard graphicalBoard = new GraphicalBoard();
             graphicalBoard.refreshGui();
 
@@ -262,6 +263,7 @@ public class GraphicalBoard {
             // ensures the minimum size is enforced.
             frame.setMinimumSize(frame.getSize());
             frame.setVisible(true);
+            System.out.println(Thread.currentThread().getPriority());
         };
         SwingUtilities.invokeLater(r);
     }

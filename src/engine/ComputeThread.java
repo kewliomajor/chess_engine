@@ -10,6 +10,7 @@ public class ComputeThread extends Thread {
     private Move move;
     private double score;
     private int maxDepth;
+    private boolean die = false;
 
     public ComputeThread(BoardState boardState, Move move, int maxDepth){
         this.boardState = boardState;
@@ -30,12 +31,19 @@ public class ComputeThread extends Thread {
         return score;
     }
 
+    public void killThread(){
+        die = true;
+    }
+
     double alphaBetaMax(BoardState boardState, double alpha, double beta, int depthLeft) {
         if ( depthLeft == 0 ) {
             return boardState.getBoardScore();
         }
         List<Move> validMoves = boardState.getAllValidMoves(boardState.getCurrentMoveColor());
         for (Move move : validMoves) {
+            if (die){
+                return 0;
+            }
             BoardState afterMoveBoard = new BoardState(boardState);
             afterMoveBoard.makeMove(move);
             double score = alphaBetaMin(afterMoveBoard, alpha, beta, depthLeft - 1 );
@@ -53,6 +61,9 @@ public class ComputeThread extends Thread {
         }
         List<Move> validMoves = boardState.getAllValidMoves(boardState.getCurrentMoveColor());
         for (Move move : validMoves) {
+            if (die){
+                return 0;
+            }
             BoardState afterMoveBoard = new BoardState(boardState);
             afterMoveBoard.makeMove(move);
             double score = alphaBetaMax(afterMoveBoard, alpha, beta, depthLeft - 1 );
