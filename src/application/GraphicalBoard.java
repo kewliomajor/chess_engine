@@ -417,6 +417,11 @@ public class GraphicalBoard {
         }
         waitingForComputer = false;
         updateEvaluation();
+        MakeEngineThinkInBackground();
+    }
+
+    private void MakeEngineThinkInBackground(){
+        engine.searchInBackground(boardState);
     }
 
     private void showWinner(pieces.Color color){

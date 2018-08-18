@@ -9,15 +9,17 @@ public class ComputeThread extends Thread {
     private BoardState boardState;
     private Move move;
     private double score;
+    private int maxDepth;
 
-    public ComputeThread(BoardState boardState, Move move){
+    public ComputeThread(BoardState boardState, Move move, int maxDepth){
         this.boardState = boardState;
         this.move = move;
+        this.maxDepth = maxDepth;
     }
 
     public void run()
     {
-        score = -alphaBetaMax(boardState, -10000, +10000, 4);
+        score = -alphaBetaMax(boardState, -10000, +10000, maxDepth);
     }
 
     public Move getMove(){
