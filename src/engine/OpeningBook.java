@@ -13,7 +13,27 @@ public class OpeningBook extends DefaultTreeModel {
     private int blackKingStartPos;
     private int whiteKingStartPos;
     private int offset = -1;
-    protected MoveTreeNode root;
+    private MoveTreeNode root;
+
+    //known moves
+    //white
+    private Move c4;
+    private Move d4;
+    private Move e4;
+    private Move Nc3;
+    private Move Nf3;
+
+    //black
+    private Move b6;
+    private Move c5;
+    private Move c6;
+    private Move d5;
+    private Move d6;
+    private Move e5;
+    private Move e6;
+    private Move Nc6;
+    private Move Nf6;
+    private Move Bb7;
 
     public OpeningBook(BoardState boardState){
         super(new MoveTreeNode(new Move(0, 0)));
@@ -23,7 +43,28 @@ public class OpeningBook extends DefaultTreeModel {
         if (boardState.getPlayerColor() == Color.BLACK){
             offset = 1;
         }
+        createKnownMoves();
         buildBook();
+    }
+
+    private void createKnownMoves(){
+        //white
+        c4 = new Move(whiteKingStartPos+12*offset, whiteKingStartPos+32*offset);
+        d4 = new Move(whiteKingStartPos+11*offset, whiteKingStartPos+31*offset);
+        e4 = new Move(whiteKingStartPos+10*offset, whiteKingStartPos+30*offset);
+        Nc3 = new Move(whiteKingStartPos+3*offset, whiteKingStartPos+22*offset);
+        Nf3 = new Move(whiteKingStartPos-2*offset, whiteKingStartPos+19*offset);
+        //black
+        b6 = new Move(whiteKingStartPos+63*offset, whiteKingStartPos+53*offset);
+        c5 = new Move(whiteKingStartPos+62*offset, whiteKingStartPos+42*offset);
+        c6 = new Move(whiteKingStartPos+62*offset, whiteKingStartPos+52*offset);
+        d5 = new Move(whiteKingStartPos+61*offset, whiteKingStartPos+41*offset);
+        d6 = new Move(whiteKingStartPos+61*offset, whiteKingStartPos+51*offset);
+        e5 = new Move(whiteKingStartPos+60*offset, whiteKingStartPos+40*offset);
+        e6 = new Move(whiteKingStartPos+60*offset, whiteKingStartPos+50*offset);
+        Nc6 = new Move(whiteKingStartPos+73*offset, whiteKingStartPos+52*offset);
+        Nf6 = new Move(whiteKingStartPos+68*offset, whiteKingStartPos+49*offset);
+        Bb7 = new Move(whiteKingStartPos+72*offset, whiteKingStartPos+63*offset);
     }
 
     public Move getNextMove(List<Move> moves){
@@ -61,8 +102,7 @@ public class OpeningBook extends DefaultTreeModel {
     }
 
     private MoveTreeNode getKingPawnBookTree(){
-        int kingPawnStartPos = whiteKingStartPos+10*offset;
-        MoveTreeNode kingPawnMove = new MoveTreeNode(new Move(kingPawnStartPos, kingPawnStartPos+20*offset));
+        MoveTreeNode kingPawnMove = new MoveTreeNode(e4);
 
         insertNodeInto(getSicilianBookTree(), kingPawnMove, 0);
 
@@ -70,9 +110,9 @@ public class OpeningBook extends DefaultTreeModel {
     }
 
     private MoveTreeNode getSicilianBookTree(){
-        MoveTreeNode sicilian = new MoveTreeNode(new Move(whiteKingStartPos+62*offset, whiteKingStartPos+42*offset));
-        MoveTreeNode sicilianNf3 = new MoveTreeNode(new Move(whiteKingStartPos-2*offset, whiteKingStartPos+19*offset));
-        MoveTreeNode sicilianNf3d6 = new MoveTreeNode(new Move(whiteKingStartPos+61*offset, whiteKingStartPos+51*offset));
+        MoveTreeNode sicilian = new MoveTreeNode(c5);
+        MoveTreeNode sicilianNf3 = new MoveTreeNode(Nf3);
+        MoveTreeNode sicilianNf3d6 = new MoveTreeNode(d6);
         insertNodeInto(sicilianNf3, sicilian, 0);
         insertNodeInto(sicilianNf3d6, sicilianNf3, 0);
 
@@ -80,29 +120,33 @@ public class OpeningBook extends DefaultTreeModel {
     }
 
     private MoveTreeNode getQueenPawnBookTree(){
-        int queenPawnStartPos = whiteKingStartPos+11*offset;
-        MoveTreeNode queenPawnMove = new MoveTreeNode(new Move(queenPawnStartPos, queenPawnStartPos+20*offset));
+        MoveTreeNode queenPawnMove = new MoveTreeNode(d4);
 
-        insertNodeInto(getQGDBookTree(queenPawnStartPos), queenPawnMove, 0);
-        insertNodeInto(getQEnglishDefenseBookTree(queenPawnStartPos), queenPawnMove, 0);
+        insertNodeInto(getQGDBookTree(), queenPawnMove, 0);
+        insertNodeInto(getQEnglishDefenseBookTree(), queenPawnMove, 0);
 
         return queenPawnMove;
     }
 
-    private MoveTreeNode getQGDBookTree(int queenPawnStartPos){
-        MoveTreeNode symmetrical = new MoveTreeNode(new Move(queenPawnStartPos+50*offset, queenPawnStartPos+30*offset));
-        MoveTreeNode qgd = new MoveTreeNode(new Move(queenPawnStartPos+offset, queenPawnStartPos+21*offset));
-        MoveTreeNode qgdc6 = new MoveTreeNode(new Move(queenPawnStartPos+51*offset, queenPawnStartPos+41*offset));
+    private MoveTreeNode getQGDBookTree(){
+        MoveTreeNode symmetrical = new MoveTreeNode(d5);
+        MoveTreeNode qgd = new MoveTreeNode(c4);
+        MoveTreeNode qgdc6 = new MoveTreeNode(c6);
+        MoveTreeNode qgde6 = new MoveTreeNode(e6);
         insertNodeInto(qgd, symmetrical, 0);
         insertNodeInto(qgdc6, qgd, 0);
+        insertNodeInto(qgde6, qgd, 0);
+        insertNodeInto(new MoveTreeNode(Nc3), qgdc6, 0);
+        insertNodeInto(new MoveTreeNode(Nc3), qgde6, 0);
 
         return symmetrical;
     }
 
-    private MoveTreeNode getQEnglishDefenseBookTree(int queenPawnStartPos){
-        MoveTreeNode englishDefense = new MoveTreeNode(new Move(queenPawnStartPos+52*offset, queenPawnStartPos+42*offset));
-        MoveTreeNode englishDefensec4 = new MoveTreeNode(new Move(queenPawnStartPos+offset, queenPawnStartPos+21*offset));
-        MoveTreeNode englishDefensec4Bb7 = new MoveTreeNode(new Move(queenPawnStartPos+61*offset, queenPawnStartPos+52*offset));
+    private MoveTreeNode getQEnglishDefenseBookTree(){
+        //b6
+        MoveTreeNode englishDefense = new MoveTreeNode(b6);
+        MoveTreeNode englishDefensec4 = new MoveTreeNode(c4);
+        MoveTreeNode englishDefensec4Bb7 = new MoveTreeNode(Bb7);
         insertNodeInto(englishDefensec4, englishDefense, 0);
         insertNodeInto(englishDefensec4Bb7, englishDefensec4, 0);
 
@@ -110,12 +154,12 @@ public class OpeningBook extends DefaultTreeModel {
     }
 
     private MoveTreeNode getRetiTree(){
-        MoveTreeNode retiKnightMove = new MoveTreeNode(new Move(whiteKingStartPos-2*offset, whiteKingStartPos+19*offset));
+        MoveTreeNode retiKnightMove = new MoveTreeNode(Nf3);
 
         //queen pawn
-        MoveTreeNode queenPawn = new MoveTreeNode(new Move(whiteKingStartPos+61*offset, whiteKingStartPos+41*offset));
-        MoveTreeNode queenPawnd4 = new MoveTreeNode(new Move(whiteKingStartPos+11*offset, whiteKingStartPos+31*offset));
-        MoveTreeNode queenPawnd4c6 = new MoveTreeNode(new Move(whiteKingStartPos+62*offset, whiteKingStartPos+52*offset));
+        MoveTreeNode queenPawn = new MoveTreeNode(d5);
+        MoveTreeNode queenPawnd4 = new MoveTreeNode(d4);
+        MoveTreeNode queenPawnd4c6 = new MoveTreeNode(c6);
         insertNodeInto(queenPawn, retiKnightMove, 0);
         insertNodeInto(queenPawnd4, queenPawn, 0);
         insertNodeInto(queenPawnd4c6, queenPawnd4, 0);
@@ -124,21 +168,20 @@ public class OpeningBook extends DefaultTreeModel {
     }
 
     private MoveTreeNode getEnglishTree(){
-        int cPawnStartPos = whiteKingStartPos+12*offset;
-        MoveTreeNode englishMove = new MoveTreeNode(new Move(cPawnStartPos, cPawnStartPos+20*offset));
+        MoveTreeNode englishMove = new MoveTreeNode(c4);
 
         //king pawn
-        MoveTreeNode kingPawn = new MoveTreeNode(new Move(cPawnStartPos+48*offset, cPawnStartPos+28*offset));
-        MoveTreeNode kingPawnNc3 = new MoveTreeNode(new Move(cPawnStartPos-9*offset, cPawnStartPos+10*offset));
-        MoveTreeNode kingPawnNc3Nf6 = new MoveTreeNode(new Move(cPawnStartPos+56*offset, cPawnStartPos+37*offset));
+        MoveTreeNode kingPawn = new MoveTreeNode(e5);
+        MoveTreeNode kingPawnNc3 = new MoveTreeNode(Nc3);
+        MoveTreeNode kingPawnNc3Nf6 = new MoveTreeNode(Nf6);
         insertNodeInto(kingPawn, englishMove, 0);
         insertNodeInto(kingPawnNc3, kingPawn, 0);
         insertNodeInto(kingPawnNc3Nf6, kingPawnNc3, 0);
 
         //symmetrical
-        MoveTreeNode symmetrical = new MoveTreeNode(new Move(cPawnStartPos+50*offset, cPawnStartPos+30*offset));
-        MoveTreeNode symmetricalNf3 = new MoveTreeNode(new Move(whiteKingStartPos-2*offset, whiteKingStartPos+19*offset));
-        MoveTreeNode symmetricalNf3Nc6 = new MoveTreeNode(new Move(cPawnStartPos+61*offset, cPawnStartPos+40*offset));
+        MoveTreeNode symmetrical = new MoveTreeNode(c5);
+        MoveTreeNode symmetricalNf3 = new MoveTreeNode(Nf3);
+        MoveTreeNode symmetricalNf3Nc6 = new MoveTreeNode(Nc6);
         insertNodeInto(symmetrical, englishMove, 0);
         insertNodeInto(symmetricalNf3, symmetrical, 0);
         insertNodeInto(symmetricalNf3Nc6, symmetricalNf3, 0);

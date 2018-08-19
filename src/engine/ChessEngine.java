@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ChessEngine {
 
-    private static final int SEARCH_DEPTH = 3;
+    private static final int SEARCH_DEPTH = 4;
     private Color engineColor;
     private OpeningBook openingBook;
     private List<ComputeThread> runningThreads = new ArrayList<>();
@@ -98,7 +98,7 @@ public class ChessEngine {
 
         try {
             correctThread.join();
-            System.out.println("getting move from background thread for response " + lastMove.getStartPosition() + " to " + lastMove.getEndPosition());
+            //System.out.println("getting move from background thread for response " + lastMove.getStartPosition() + " to " + lastMove.getEndPosition());
             response = correctThread.getBestResponse();
         } catch (InterruptedException e) {
             e.printStackTrace();
