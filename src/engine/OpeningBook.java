@@ -105,6 +105,8 @@ public class OpeningBook extends DefaultTreeModel {
         MoveTreeNode kingPawnMove = new MoveTreeNode(e4);
 
         insertNodeInto(getSicilianBookTree(), kingPawnMove, 0);
+        insertNodeInto(getFrenchBookTree(), kingPawnMove, 0);
+        insertNodeInto(getCaroKannBookTree(), kingPawnMove, 0);
 
         return kingPawnMove;
     }
@@ -113,10 +115,33 @@ public class OpeningBook extends DefaultTreeModel {
         MoveTreeNode sicilian = new MoveTreeNode(c5);
         MoveTreeNode sicilianNf3 = new MoveTreeNode(Nf3);
         MoveTreeNode sicilianNf3d6 = new MoveTreeNode(d6);
+
         insertNodeInto(sicilianNf3, sicilian, 0);
         insertNodeInto(sicilianNf3d6, sicilianNf3, 0);
 
         return sicilian;
+    }
+
+    private MoveTreeNode getFrenchBookTree(){
+        MoveTreeNode french = new MoveTreeNode(e6);
+        MoveTreeNode frenchd4 = new MoveTreeNode(d4);
+        MoveTreeNode frenchd4d5 = new MoveTreeNode(d5);
+
+        insertNodeInto(frenchd4, french, 0);
+        insertNodeInto(frenchd4d5, frenchd4, 0);
+
+        return french;
+    }
+
+    private MoveTreeNode getCaroKannBookTree(){
+        MoveTreeNode carokann = new MoveTreeNode(c6);
+        MoveTreeNode carokannd4 = new MoveTreeNode(d4);
+        MoveTreeNode carokannd4d5 = new MoveTreeNode(d5);
+
+        insertNodeInto(carokannd4, carokann, 0);
+        insertNodeInto(carokannd4d5, carokannd4, 0);
+
+        return carokann;
     }
 
     private MoveTreeNode getQueenPawnBookTree(){
