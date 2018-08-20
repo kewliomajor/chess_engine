@@ -163,13 +163,7 @@ public class BoardState {
 	public void makeMove(Move move){
 		move(move);
 		currentMove = Color.getOpposite(currentMove);
-	}
-
-	public void makeMove(Move move, boolean swapMove){
-		move(move);
-		if (swapMove){
-			currentMove = Color.getOpposite(currentMove);
-		}
+		moveHistory.add(move);
 	}
 
 	public void move(Move move){
@@ -177,6 +171,29 @@ public class BoardState {
 			pawn.setDoubleMove(false);
 		}
 		doubleMovingPawns.clear();
+		AbstractPiece fromPiece = board[move.getStartPosition()];
+		//case for castling
+		if (fromPiece instanceof King && (move.getStartPosition() + 2 == move.getEndPosition() || move.getStartPosition() -2 == move.getEndPosition())){
+			EmptyPiece rookEmptyPiece;
+			int rookPosition;
+			int futureRookPosition;
+			int offset = 0;
+			if (playerColor == pieces.Color.BLACK){
+				offset = 1;
+			}
+			if (move.getStartPosition() + 2 == move.getEndPosition()){
+				rookPosition = move.getStartPosition()+3 + offset;
+				futureRookPosition = move.getStartPosition()+1;
+			}
+			else{
+				rookPosition = move.getStartPosition()-4 + offset;
+				futureRookPosition = move.getStartPosition()-1;
+			}
+			rookEmptyPiece = new EmptyPiece(rookPosition);
+			board[futureRookPosition] = board[rookPosition];
+			board[futureRookPosition].move(new Move(rookPosition, futureRookPosition));
+			board[rookPosition] = rookEmptyPiece;
+		}
 		board[move.getEndPosition()] = board[move.getStartPosition()];
 		board[move.getStartPosition()] = new EmptyPiece(move.getStartPosition());
 		AbstractPiece piece = board[move.getEndPosition()];
@@ -189,7 +206,6 @@ public class BoardState {
 				board[piece.getPosition()] = new Queen(piece.getColor(), piece.getPosition());
 			}
 		}
-		moveHistory.add(move);
 	}
 
 
