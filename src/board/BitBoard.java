@@ -111,10 +111,10 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             }
 
             byte piece = board[i];
-            if (!whiteHasMoves && BitPieces.isPieceWhite(piece) && getValidPieceMoves(piece).size() > 0){
+            if (!whiteHasMoves && BitPieces.isPieceWhite(piece) && getValidPieceMoves(i).size() > 0){
                 whiteHasMoves = true;
             }
-            if (!blackHasMoves && !BitPieces.isPieceWhite(piece) && getValidPieceMoves(piece).size() > 0){
+            if (!blackHasMoves && !BitPieces.isPieceWhite(piece) && getValidPieceMoves(i).size() > 0){
                 blackHasMoves = true;
             }
 
@@ -428,8 +428,8 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             if (board[i] == EMPTY_PIECE || board[i] == INVALID_PIECE){
                 continue;
             }
-            if (BitPieces.isPieceWhite(board[i]) && color == Color.WHITE ||
-                    !BitPieces.isPieceWhite(board[i]) && color == Color.BLACK){
+            if (!BitPieces.isPieceWhite(board[i]) && color == Color.WHITE ||
+                    BitPieces.isPieceWhite(board[i]) && color == Color.BLACK){
                 continue;
             }
             List<Move> moves = getPieceMoves(i);
@@ -629,11 +629,10 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         if (toPiece == INVALID_PIECE){
             return false;
         }
-        else if (BitPieces.colorsMatch(fromPiece, toPiece)){
+        else if (toPiece != EMPTY_PIECE && BitPieces.colorsMatch(fromPiece, toPiece)){
             return false;
         }
-        //now the actual logic for individual pieces
-        if (!isSpecificPieceMoveValid(move.getStartPosition(), move.getEndPosition())){
+        else if (!isSpecificPieceMoveValid(move.getStartPosition(), move.getEndPosition())){
             return false;
         }
 
