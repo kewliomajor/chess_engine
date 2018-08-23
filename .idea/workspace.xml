@@ -18,15 +18,16 @@
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.6" value="6" />
-          <entry key="project.open.time.7" value="4" />
+          <entry key="project.open.time.7" value="5" />
           <entry key="project.open.time.8" value="1" />
-          <entry key="project.opened" value="14" />
+          <entry key="project.open.time.9" value="1" />
+          <entry key="project.opened" value="16" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="class" value="1" />
-          <entry key="java" value="90" />
+          <entry key="java" value="103" />
           <entry key="png" value="3" />
         </counts>
       </usages-collector>
@@ -34,52 +35,51 @@
         <counts>
           <entry key="CLASS" value="1" />
           <entry key="Image" value="3" />
-          <entry key="JAVA" value="90" />
+          <entry key="JAVA" value="103" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="27643" />
+          <entry key="java" value="34348" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="27643" />
+          <entry key="JAVA" value="34348" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pieces/Rook.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="22" column="55" selection-start-line="22" selection-start-column="55" selection-end-line="22" selection-end-column="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/application/GraphicalBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="428">
-              <caret line="409" column="17" lean-forward="true" selection-start-line="409" selection-start-column="17" selection-end-line="409" selection-end-column="17" />
+            <state relative-caret-position="156">
+              <caret line="315" column="50" selection-start-line="315" selection-start-column="50" selection-end-line="315" selection-end-column="50" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#8800#8801#0" expanded="true" />
+                <element signature="e#8842#8843#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/engine/OpeningBook.java">
+        <entry file="file://$PROJECT_DIR$/src/pieces/Queen.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="125" column="51" selection-start-line="125" selection-start-column="51" selection-end-line="125" selection-end-column="51" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="68">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pieces/ButtonPiece.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="15" column="29" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -87,8 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/engine/ChessEngine.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="149">
-              <caret line="118" column="36" selection-start-line="118" selection-start-column="36" selection-end-line="118" selection-end-column="36" />
+            <state relative-caret-position="1037">
+              <caret line="77" column="57" selection-start-line="77" selection-start-column="57" selection-end-line="77" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -97,10 +97,52 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pieces/King.java">
+        <entry file="file://$PROJECT_DIR$/src/board/BitBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="149">
-              <caret line="31" column="18" selection-start-line="31" selection-start-column="18" selection-end-line="31" selection-end-column="18" />
+            <state relative-caret-position="337">
+              <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#1561#1562#0" expanded="true" />
+                <element signature="e#1616#1617#0" expanded="true" />
+                <element signature="e#25407#25408#0" expanded="true" />
+                <element signature="e#25452#25453#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pieces/BitPieces.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="408">
+              <caret line="24" column="39" selection-start-line="24" selection-start-column="26" selection-end-line="24" selection-end-column="39" />
+              <folding>
+                <element signature="e#1027#1028#0" expanded="true" />
+                <element signature="e#1080#1081#0" expanded="true" />
+                <element signature="e#1238#1239#0" expanded="true" />
+                <element signature="e#1293#1294#0" expanded="true" />
+                <element signature="e#1455#1456#0" expanded="true" />
+                <element signature="e#1512#1513#0" expanded="true" />
+                <element signature="e#1567#1568#0" expanded="true" />
+                <element signature="e#1627#1628#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/board/BoardState.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="92" column="4" lean-forward="true" selection-start-line="92" selection-start-column="4" selection-end-line="94" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#2534#2535#0" expanded="true" />
+                <element signature="e#2573#2574#0" expanded="true" />
+                <element signature="e#17209#17210#0" expanded="true" />
+                <element signature="e#17253#17254#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -108,8 +150,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/engine/ComputeThread.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="35" column="5" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
+            <state relative-caret-position="544">
+              <caret line="45" column="25" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -117,25 +159,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/board/BoardState.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/board/AbstractBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="165" column="30" lean-forward="true" selection-start-line="165" selection-start-column="30" selection-end-line="165" selection-end-column="30" />
+            <state relative-caret-position="561">
+              <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="53" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2242#2243#0" expanded="true" />
-                <element signature="e#2261#2262#0" expanded="true" />
-                <element signature="e#2412#2413#0" expanded="true" />
-                <element signature="e#2437#2438#0" expanded="true" />
-                <element signature="e#2476#2477#0" expanded="true" />
-                <element signature="e#2501#2502#0" expanded="true" />
-                <element signature="e#2534#2535#0" expanded="true" />
-                <element signature="e#2559#2560#0" expanded="true" />
-                <element signature="e#2589#2590#0" expanded="true" />
-                <element signature="e#2618#2619#0" expanded="true" />
-                <element signature="e#2648#2649#0" expanded="true" />
-                <element signature="e#2677#2678#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -152,25 +182,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pass</find>
-      <find>checkmat</find>
-      <find>isColorPiece</find>
-      <find>setpiece</find>
-      <find>COLS</find>
-      <find>kinginc</find>
-      <find>boardstate</find>
-      <find>offset</find>
-      <find>movePiece</find>
-      <find>cast</find>
-      <find>kingmove</find>
-      <find>moveHistory</find>
-      <find>ChessEngine</find>
-      <find>score</find>
-      <find>tostring</find>
-      <find>basicmo</find>
-      <find>thread.run</find>
-      <find>thread ended</find>
-      <find>makeenginemove</find>
       <find>.start</find>
       <find>try</find>
       <find>inter</find>
@@ -178,10 +189,29 @@
       <find>move from</find>
       <find>//system</find>
       <find>pawnChecks</find>
-      <find>kingincheck</find>
-      <find>think</find>
-      <find>makemove</find>
       <find>ah shit</find>
+      <find>makemove</find>
+      <find>think</find>
+      <find>kingincheck</find>
+      <find>getallvalidmoves</find>
+      <find>ismove</find>
+      <find>getallva</find>
+      <find>getplayer</find>
+      <find>computethre</find>
+      <find>getafter</find>
+      <find>getmoveh</find>
+      <find>getpiece</find>
+      <find>getbest</find>
+      <find>getpiecemo</find>
+      <find>getpiecemove</find>
+      <find>from</find>
+      <find>pieceis</find>
+      <find>getbuttonfrom</find>
+      <find>getpiecestr</find>
+      <find>getPieceIcon</find>
+      <find>getBoardStatePositionFromButtonPosition</find>
+      <find>new button</find>
+      <find>system.out</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\walth_000\Documents\GitHub\chess_engine\src</dir>
@@ -196,7 +226,6 @@
         <option value="$PROJECT_DIR$/src/Application/Application.java" />
         <option value="$PROJECT_DIR$/src/Application/GraphicalBoard.java" />
         <option value="$PROJECT_DIR$/src/pieces/Color.java" />
-        <option value="$PROJECT_DIR$/src/pieces/ButtonPiece.java" />
         <option value="$PROJECT_DIR$/src/pieces/EmptyPiece.java" />
         <option value="$PROJECT_DIR$/src/pieces/InvalidPiece.java" />
         <option value="$PROJECT_DIR$/src/application/CheckmateException.java" />
@@ -212,12 +241,17 @@
         <option value="$PROJECT_DIR$/src/pieces/Knight.java" />
         <option value="$PROJECT_DIR$/src/pieces/Queen.java" />
         <option value="$PROJECT_DIR$/src/pieces/Rook.java" />
-        <option value="$PROJECT_DIR$/src/engine/ComputeThread.java" />
-        <option value="$PROJECT_DIR$/src/engine/OpeningBook.java" />
-        <option value="$PROJECT_DIR$/src/application/GraphicalBoard.java" />
         <option value="$PROJECT_DIR$/src/pieces/King.java" />
+        <option value="$PROJECT_DIR$/src/pieces/BitPieces.java" />
+        <option value="$PROJECT_DIR$/src/engine/OpeningBook.java" />
+        <option value="$PROJECT_DIR$/src/board/BoardFactory.java" />
+        <option value="$PROJECT_DIR$/src/engine/ComputeThread.java" />
         <option value="$PROJECT_DIR$/src/engine/ChessEngine.java" />
+        <option value="$PROJECT_DIR$/src/pieces/ButtonPiece.java" />
+        <option value="$PROJECT_DIR$/src/board/AbstractBoard.java" />
         <option value="$PROJECT_DIR$/src/board/BoardState.java" />
+        <option value="$PROJECT_DIR$/src/board/BitBoard.java" />
+        <option value="$PROJECT_DIR$/src/application/GraphicalBoard.java" />
       </list>
     </option>
   </component>
@@ -232,8 +266,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -280,11 +315,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1534800529721" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1534981772420" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
@@ -342,7 +376,7 @@
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23960881" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24572127" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -398,13 +432,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pieces/ButtonPiece.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="46" lean-forward="true" selection-start-line="14" selection-start-column="46" selection-end-line="14" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/board/Utils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
@@ -419,13 +446,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pieces/Color.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/application/StalemateException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
@@ -435,13 +455,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/out/production/chess_engine/application/Application.class">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pieces/Pawn.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="48" column="56" selection-start-line="48" selection-start-column="56" selection-end-line="48" selection-end-column="56" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/engine/BlackOpeningBook.java" />
     <entry file="file://$PROJECT_DIR$/src/engine/WhiteOpeningBook.java" />
@@ -473,34 +486,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pieces/Queen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="25" column="44" selection-start-line="25" selection-start-column="44" selection-end-line="25" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pieces/AbstractPiece.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="34" selection-start-line="34" selection-end-line="34" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pieces/Move.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="23" column="25" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/engine/ComputeThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="35" column="5" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -511,37 +500,100 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/engine/OpeningBook.java">
+    <entry file="file://$PROJECT_DIR$/src/pieces/Color.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="125" column="51" selection-start-line="125" selection-start-column="51" selection-end-line="125" selection-end-column="51" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/application/GraphicalBoard.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="428">
-          <caret line="409" column="17" lean-forward="true" selection-start-line="409" selection-start-column="17" selection-end-line="409" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="136">
+          <caret line="8" column="9" lean-forward="true" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pieces/King.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="31" column="18" selection-start-line="31" selection-start-column="18" selection-end-line="31" selection-end-column="18" />
+        <state relative-caret-position="680">
+          <caret line="52" column="9" lean-forward="true" selection-start-line="52" selection-start-column="9" selection-end-line="52" selection-end-column="9" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/pieces/Pawn.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="48" column="56" lean-forward="true" selection-start-line="48" selection-start-column="56" selection-end-line="48" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pieces/AbstractPiece.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="969">
+          <caret line="114" column="9" lean-forward="true" selection-start-line="114" selection-start-column="9" selection-end-line="114" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/engine/OpeningBook.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-943">
+          <caret line="40" column="49" lean-forward="true" selection-start-line="40" selection-start-column="49" selection-end-line="40" selection-end-column="49" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/board/BoardFactory.java" />
     <entry file="file://$PROJECT_DIR$/src/engine/ChessEngine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="118" column="36" selection-start-line="118" selection-start-column="36" selection-end-line="118" selection-end-column="36" />
+        <state relative-caret-position="1037">
+          <caret line="77" column="57" selection-start-line="77" selection-start-column="57" selection-end-line="77" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pieces/BitPieces.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="24" column="39" selection-start-line="24" selection-start-column="26" selection-end-line="24" selection-end-column="39" />
+          <folding>
+            <element signature="e#1027#1028#0" expanded="true" />
+            <element signature="e#1080#1081#0" expanded="true" />
+            <element signature="e#1238#1239#0" expanded="true" />
+            <element signature="e#1293#1294#0" expanded="true" />
+            <element signature="e#1455#1456#0" expanded="true" />
+            <element signature="e#1512#1513#0" expanded="true" />
+            <element signature="e#1567#1568#0" expanded="true" />
+            <element signature="e#1627#1628#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/engine/ComputeThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="45" column="25" selection-start-line="45" selection-start-column="25" selection-end-line="45" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pieces/ButtonPiece.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="29" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pieces/Queen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/board/AbstractBoard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="53" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -550,22 +602,40 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/board/BoardState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="165" column="30" lean-forward="true" selection-start-line="165" selection-start-column="30" selection-end-line="165" selection-end-column="30" />
+        <state relative-caret-position="323">
+          <caret line="92" column="4" lean-forward="true" selection-start-line="92" selection-start-column="4" selection-end-line="94" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2242#2243#0" expanded="true" />
-            <element signature="e#2261#2262#0" expanded="true" />
-            <element signature="e#2412#2413#0" expanded="true" />
-            <element signature="e#2437#2438#0" expanded="true" />
-            <element signature="e#2476#2477#0" expanded="true" />
-            <element signature="e#2501#2502#0" expanded="true" />
             <element signature="e#2534#2535#0" expanded="true" />
-            <element signature="e#2559#2560#0" expanded="true" />
-            <element signature="e#2589#2590#0" expanded="true" />
-            <element signature="e#2618#2619#0" expanded="true" />
-            <element signature="e#2648#2649#0" expanded="true" />
-            <element signature="e#2677#2678#0" expanded="true" />
+            <element signature="e#2573#2574#0" expanded="true" />
+            <element signature="e#17209#17210#0" expanded="true" />
+            <element signature="e#17253#17254#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/board/BitBoard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="64" lean-forward="true" selection-start-line="64" selection-end-line="64" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1561#1562#0" expanded="true" />
+            <element signature="e#1616#1617#0" expanded="true" />
+            <element signature="e#25407#25408#0" expanded="true" />
+            <element signature="e#25452#25453#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/application/GraphicalBoard.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="315" column="50" selection-start-line="315" selection-start-column="50" selection-end-line="315" selection-end-column="50" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#8800#8801#0" expanded="true" />
+            <element signature="e#8842#8843#0" expanded="true" />
           </folding>
         </state>
       </provider>

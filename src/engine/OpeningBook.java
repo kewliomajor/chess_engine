@@ -1,5 +1,6 @@
 package engine;
 
+import board.AbstractBoard;
 import board.BoardState;
 import pieces.Color;
 import pieces.Move;
@@ -20,6 +21,7 @@ public class OpeningBook extends DefaultTreeModel {
     private Move c4;
     private Move d4;
     private Move e4;
+    private Move we5;
     private Move Nc3;
     private Move Nf3;
 
@@ -34,11 +36,12 @@ public class OpeningBook extends DefaultTreeModel {
     private Move Nc6;
     private Move Nf6;
     private Move Bb7;
+    private Move Bf5;
 
-    public OpeningBook(BoardState boardState){
+    public OpeningBook(AbstractBoard boardState){
         super(new MoveTreeNode(new Move(0, 0)));
-        this.blackKingStartPos = boardState.getBlackKing().getPosition();
-        this.whiteKingStartPos = boardState.getWhiteKing().getPosition();
+        this.blackKingStartPos = boardState.getBlackKingPosition();
+        this.whiteKingStartPos = boardState.getWhiteKingPosition();
         System.out.println("white king starting at position " + whiteKingStartPos);
         if (boardState.getPlayerColor() == Color.BLACK){
             offset = 1;
@@ -52,6 +55,7 @@ public class OpeningBook extends DefaultTreeModel {
         c4 = new Move(whiteKingStartPos+12*offset, whiteKingStartPos+32*offset);
         d4 = new Move(whiteKingStartPos+11*offset, whiteKingStartPos+31*offset);
         e4 = new Move(whiteKingStartPos+10*offset, whiteKingStartPos+30*offset);
+        we5 = new Move(whiteKingStartPos+30*offset, whiteKingStartPos+40*offset);
         Nc3 = new Move(whiteKingStartPos+3*offset, whiteKingStartPos+22*offset);
         Nf3 = new Move(whiteKingStartPos-2*offset, whiteKingStartPos+19*offset);
         //black
@@ -65,6 +69,7 @@ public class OpeningBook extends DefaultTreeModel {
         Nc6 = new Move(whiteKingStartPos+73*offset, whiteKingStartPos+52*offset);
         Nf6 = new Move(whiteKingStartPos+68*offset, whiteKingStartPos+49*offset);
         Bb7 = new Move(whiteKingStartPos+72*offset, whiteKingStartPos+63*offset);
+        Bf5 = new Move(whiteKingStartPos+72*offset, whiteKingStartPos+39*offset);
     }
 
     public Move getNextMove(List<Move> moves){
@@ -104,11 +109,23 @@ public class OpeningBook extends DefaultTreeModel {
     private MoveTreeNode getKingPawnBookTree(){
         MoveTreeNode kingPawnMove = new MoveTreeNode(e4);
 
+        insertNodeInto(getKingPawnSymmetricBookTree(), kingPawnMove, 0);
         insertNodeInto(getSicilianBookTree(), kingPawnMove, 0);
         insertNodeInto(getFrenchBookTree(), kingPawnMove, 0);
         insertNodeInto(getCaroKannBookTree(), kingPawnMove, 0);
 
         return kingPawnMove;
+    }
+
+    private MoveTreeNode getKingPawnSymmetricBookTree(){
+        MoveTreeNode symmetric = new MoveTreeNode(e5);
+        MoveTreeNode symmetricNf3 = new MoveTreeNode(Nf3);
+        MoveTreeNode symmetricNf3Nc6 = new MoveTreeNode(Nc6);
+
+        insertNodeInto(symmetricNf3, symmetric, 0);
+        insertNodeInto(symmetricNf3Nc6, symmetricNf3, 0);
+
+        return symmetric;
     }
 
     private MoveTreeNode getSicilianBookTree(){
@@ -137,9 +154,13 @@ public class OpeningBook extends DefaultTreeModel {
         MoveTreeNode carokann = new MoveTreeNode(c6);
         MoveTreeNode carokannd4 = new MoveTreeNode(d4);
         MoveTreeNode carokannd4d5 = new MoveTreeNode(d5);
+        MoveTreeNode carokannd4d5e5 = new MoveTreeNode(we5);
+        MoveTreeNode carokannd4d5e5Bf5 = new MoveTreeNode(Bf5);
 
         insertNodeInto(carokannd4, carokann, 0);
         insertNodeInto(carokannd4d5, carokannd4, 0);
+        insertNodeInto(carokannd4d5e5, carokannd4d5, 0);
+        insertNodeInto(carokannd4d5e5Bf5, carokannd4d5e5, 0);
 
         return carokann;
     }

@@ -2,6 +2,7 @@ package engine;
 
 import application.CheckmateException;
 import application.StalemateException;
+import board.AbstractBoard;
 import board.BoardState;
 import pieces.Color;
 import pieces.Move;
@@ -11,19 +12,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChessEngine {
+public class ChessEngine<T> {
 
     private static final int SEARCH_DEPTH = 4;
     private Color engineColor;
     private OpeningBook openingBook;
-    private List<ComputeThread> runningThreads = new ArrayList<>();
+    private List<ComputeThread<T>> runningThreads = new ArrayList<>();
     private Map<Move, ResponseComputeThread> responses = new HashMap<>();
 
     public ChessEngine(Color engineColor){
         this.engineColor = engineColor;
     }
 
-    public void reBuildOpeningBook(BoardState boardState){
+    public void reBuildOpeningBook(AbstractBoard boardState){
         this.openingBook = new OpeningBook(boardState);
     }
 
@@ -31,11 +32,11 @@ public class ChessEngine {
         this.engineColor = color;
     }
 
-    public void searchInBackground(BoardState boardState){
+    public void searchInBackground(AbstractBoard boardState){
         clearRunningResponses();
         List<Move> validMoves = boardState.getAllValidMoves(boardState.getCurrentMoveColor());
         for (Move validMove : validMoves){
-            BoardState afterMoveBoard = new BoardState(boardState);
+            AbstractBoard<T> afterMoveBoard = (AbstractBoard<T>) boardState.getInstance(boardState);
             afterMoveBoard.makeMove(validMove);
             //System.out.println("starting response thread for move from " + validMove.getStartPosition() + " to " + validMove.getEndPosition());
             ResponseComputeThread thread = new ResponseComputeThread(afterMoveBoard, SEARCH_DEPTH);
@@ -53,7 +54,7 @@ public class ChessEngine {
         responses.clear();
     }
 
-    public Move getBestMove(BoardState boardState){
+    public Move getBestMove(AbstractBoard boardState){
         System.out.println("selecting best move for " + boardState.getCurrentMoveColor());
 
         Move response = getResponseFromLastMove(boardState);
@@ -72,7 +73,7 @@ public class ChessEngine {
         runningThreads.clear();
     }
 
-    private Move getResponseFromLastMove(BoardState boardState){
+    private Move getResponseFromLastMove(AbstractBoard boardState){
         Move response = null;
         List<Move> history = boardState.getMoveHistory();
         if (history.size() == 0){
@@ -107,7 +108,7 @@ public class ChessEngine {
         return response;
     }
 
-    private Move computeBestMove(BoardState boardState, List<ComputeThread> runningThreads, int searchDepth){
+    private Move computeBestMove(AbstractBoard boardState, List<ComputeThread<T>> runningThreads, int searchDepth){
         Move openingMove = getOpeningMove(boardState);
 
         if (openingMove != null){
@@ -141,7 +142,7 @@ public class ChessEngine {
         return bestMove;
     }
 
-    private Move getOpeningMove(BoardState boardState){
+    private Move getOpeningMove(AbstractBoard boardState){
         //check opening book
         if (openingBook == null){
             throw new RuntimeException("No opening book has been created");
@@ -149,11 +150,11 @@ public class ChessEngine {
         return openingBook.getNextMove(boardState.getMoveHistory());
     }
 
-    private Move computeFromScore(List<Move> validMoves, BoardState boardState, List<ComputeThread> runningThreads, int searchDepth){
+    private Move computeFromScore(List<Move> validMoves, AbstractBoard boardState, List<ComputeThread<T>> runningThreads, int searchDepth){
         double bestScore = -10000;
         Move bestMove = null;
         for (Move move : validMoves) {
-            BoardState afterMoveBoard = new BoardState(boardState);
+            AbstractBoard<T> afterMoveBoard = (AbstractBoard<T>) boardState.getInstance(boardState);
             afterMoveBoard.makeMove(move);
             //System.out.println("starting thread for move from " + move.getStartPosition() + " to " + move.getEndPosition());
             ComputeThread thread = new ComputeThread(afterMoveBoard, move, searchDepth);
@@ -178,14 +179,14 @@ public class ChessEngine {
     }
 
     private class ResponseComputeThread extends Thread {
-        private BoardState boardState;
+        private AbstractBoard boardState;
         private int maxDepth;
         private Move bestResponse;
-        private List<ComputeThread> runningThreads = new ArrayList<>();
+        private List<ComputeThread<T>> runningThreads = new ArrayList<>();
         private boolean die = false;
 
 
-        public ResponseComputeThread(BoardState boardState, int maxDepth){
+        public ResponseComputeThread(AbstractBoard boardState, int maxDepth){
             this.boardState = boardState;
             this.maxDepth = maxDepth;
         }

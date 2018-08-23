@@ -1,18 +1,19 @@
 package engine;
+import board.AbstractBoard;
 import board.BoardState;
 import pieces.Move;
 
 import java.util.List;
 
-public class ComputeThread extends Thread {
+public class ComputeThread<T> extends Thread {
 
-    private BoardState boardState;
+    private AbstractBoard boardState;
     private Move move;
     private double score;
     private int maxDepth;
     private boolean die = false;
 
-    public ComputeThread(BoardState boardState, Move move, int maxDepth){
+    public ComputeThread(AbstractBoard boardState, Move move, int maxDepth){
         this.boardState = boardState;
         this.move = move;
         this.maxDepth = maxDepth;
@@ -35,7 +36,7 @@ public class ComputeThread extends Thread {
         die = true;
     }
 
-    double alphaBetaMax(BoardState boardState, double alpha, double beta, int depthLeft) {
+    double alphaBetaMax(AbstractBoard boardState, double alpha, double beta, int depthLeft) {
         if ( depthLeft == 0 ) {
             return boardState.getBoardScore();
         }
@@ -44,7 +45,7 @@ public class ComputeThread extends Thread {
             if (die){
                 return 0;
             }
-            BoardState afterMoveBoard = new BoardState(boardState);
+            AbstractBoard<T> afterMoveBoard = (AbstractBoard<T>) boardState.getInstance(boardState);
             afterMoveBoard.makeMove(move);
             double score = alphaBetaMin(afterMoveBoard, alpha, beta, depthLeft - 1 );
             if( score >= beta )
@@ -55,7 +56,7 @@ public class ComputeThread extends Thread {
         return alpha;
     }
 
-    double alphaBetaMin(BoardState boardState, double alpha, double beta, int depthLeft ) {
+    double alphaBetaMin(AbstractBoard boardState, double alpha, double beta, int depthLeft ) {
         if ( depthLeft == 0 ){
             return -boardState.getBoardScore();
         }
@@ -64,7 +65,7 @@ public class ComputeThread extends Thread {
             if (die){
                 return 0;
             }
-            BoardState afterMoveBoard = new BoardState(boardState);
+            AbstractBoard<T> afterMoveBoard = (AbstractBoard<T>) boardState.getInstance(boardState);
             afterMoveBoard.makeMove(move);
             double score = alphaBetaMax(afterMoveBoard, alpha, beta, depthLeft - 1 );
             if( score <= alpha )

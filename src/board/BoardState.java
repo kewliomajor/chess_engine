@@ -5,19 +5,17 @@ import pieces.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoardState {
-
-	public static final int BOARD_SIZE = 120;
-	private static final int CHECKMATE_SCORE = 1000;
+public class BoardState extends AbstractBoard<BoardState>{
 
 	private AbstractPiece[] board;
 	private List<Pawn> doubleMovingPawns = new ArrayList<>();
 	private AbstractPiece blackKing;
 	private AbstractPiece whiteKing;
-	private Color currentMove = Color.WHITE;
-	private Color playerColor;
 
-	private List<Move> moveHistory;
+	@Override
+	public BoardState getInstance(AbstractBoard board) {
+		return new BoardState((BoardState) board);
+	}
 	
 	/**
 	 * Creates a board with all pieces in the starting formation
@@ -80,6 +78,38 @@ public class BoardState {
 		return board;
 	}
 
+	public boolean pieceIsInvalid(int position){
+		return board[position] instanceof InvalidPiece;
+	}
+
+	public boolean pieceIsKing(int position){
+		return board[position] instanceof King;
+	}
+
+	public boolean pieceIsQueen(int position){
+		return board[position] instanceof Queen;
+	}
+
+	public Color getPieceColor(int position){
+		return board[position].getColor();
+	}
+
+
+	public List<Move> getValidPieceMoves(int position){
+		List<Move> validMoves = new ArrayList<>();
+		for (Move move : board[position].getAllValidMoves(this)){
+			if (isMoveValid(move)){
+				validMoves.add(move);
+			}
+		}
+		return validMoves;
+	}
+
+
+	public Object getObject(int position){
+		return board[position];
+	}
+
 
 	public AbstractPiece getPiece(int i, int j){
 		int row = (10 * i) + 20;
@@ -88,17 +118,8 @@ public class BoardState {
 	}
 
 
-	public List<Move> getMoveHistory(){
-		return moveHistory;
-	}
-
-
 	public Color getCurrentMoveColor(){
 		return currentMove;
-	}
-
-	public Color getPlayerColor(){
-		return playerColor;
 	}
 
 	public King getWhiteKing(){
@@ -164,6 +185,16 @@ public class BoardState {
 		move(move);
 		currentMove = Color.getOpposite(currentMove);
 		moveHistory.add(move);
+	}
+
+	@Override
+	public int getBlackKingPosition() {
+		return blackKing.getPosition();
+	}
+
+	@Override
+	public int getWhiteKingPosition() {
+		return whiteKing.getPosition();
 	}
 
 	public void move(Move move){
@@ -586,6 +617,11 @@ public class BoardState {
 			return true;
 		}
 		return false;
+	}
+
+
+	public String getPieceString(int position){
+		return getPieceString(board[position]);
 	}
 
 

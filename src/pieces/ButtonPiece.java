@@ -4,20 +4,24 @@ import javax.swing.*;
 
 public class ButtonPiece extends JButton {
 
-    private AbstractPiece piece;
+    private int piecePosition;
+    private int boardX;
+    private int boardY;
     private java.awt.Color color;
 
-    public ButtonPiece(AbstractPiece piece){
+    public ButtonPiece(int piecePosition, int boardX, int boardY){
         super();
-        this.piece = piece;
+        this.piecePosition = piecePosition;
+        this.boardX = boardX;
+        this.boardY = boardY;
     }
 
-    public void setPiece(AbstractPiece piece){
-        this.piece = piece;
+    public void setPiecePosition(int piecePosition){
+        this.piecePosition = piecePosition;
     }
 
-    public AbstractPiece getPiece() {
-        return piece;
+    public int getPiecePosition() {
+        return piecePosition;
     }
 
     public void setColor(java.awt.Color color){
@@ -26,5 +30,13 @@ public class ButtonPiece extends JButton {
 
     public java.awt.Color getColor(){
         return color;
+    }
+
+    public int getBoardX() {
+        return boardX;
+    }
+
+    public int getBoardY() {
+        return boardY;
     }
 }
