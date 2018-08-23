@@ -27,7 +27,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="class" value="1" />
-          <entry key="java" value="103" />
+          <entry key="java" value="105" />
           <entry key="png" value="3" />
         </counts>
       </usages-collector>
@@ -35,28 +35,28 @@
         <counts>
           <entry key="CLASS" value="1" />
           <entry key="Image" value="3" />
-          <entry key="JAVA" value="103" />
+          <entry key="JAVA" value="105" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="34775" />
+          <entry key="java" value="35150" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="34775" />
+          <entry key="JAVA" value="35150" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/application/GraphicalBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="434" selection-start-line="434" selection-end-line="434" />
+            <state relative-caret-position="190">
+              <caret line="282" column="29" selection-start-line="282" selection-start-column="29" selection-end-line="282" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -65,10 +65,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pieces/Queen.java">
+        <entry file="file://$PROJECT_DIR$/src/engine/OpeningBook.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+            <state relative-caret-position="-493">
+              <caret line="13" column="34" lean-forward="true" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -83,22 +86,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/engine/ChessEngine.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-371">
-              <caret line="117" column="48" lean-forward="true" selection-start-line="117" selection-start-column="48" selection-end-line="117" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/board/BitBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="626" selection-start-line="626" selection-end-line="626" />
+            <state relative-caret-position="71">
+              <caret line="715" column="64" selection-start-line="715" selection-start-column="64" selection-end-line="715" selection-end-column="64" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1561#1562#0" expanded="true" />
@@ -108,14 +99,19 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pieces/BitPieces.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="237">
-              <caret line="57" column="67" selection-start-line="57" selection-start-column="67" selection-end-line="57" selection-end-column="67" />
+            <state relative-caret-position="173">
+              <caret line="65" column="7" selection-start-line="65" selection-start-column="7" selection-end-line="65" selection-end-column="7" />
               <folding>
                 <element signature="e#970#971#0" expanded="true" />
                 <element signature="e#1022#1023#0" expanded="true" />
+                <element signature="e#1388#1389#0" expanded="true" />
+                <element signature="e#1444#1445#0" expanded="true" />
+                <element signature="e#1609#1610#0" expanded="true" />
+                <element signature="e#1669#1670#0" expanded="true" />
+                <element signature="e#1839#1840#0" expanded="true" />
                 <element signature="e#1902#1903#0" expanded="true" />
                 <element signature="e#2283#2284#0" expanded="true" />
                 <element signature="e#2342#2343#0" expanded="true" />
@@ -129,8 +125,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/board/AbstractBoard.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="54" column="34" selection-start-line="54" selection-start-column="34" selection-end-line="54" selection-end-column="34" />
+            <state relative-caret-position="305">
+              <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/engine/ChessEngine.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -149,15 +157,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>computethre</find>
-      <find>getafter</find>
-      <find>getmoveh</find>
-      <find>getpiece</find>
-      <find>getbest</find>
-      <find>getpiecemo</find>
-      <find>getpiecemove</find>
-      <find>from</find>
-      <find>pieceis</find>
       <find>getbuttonfrom</find>
       <find>getpiecestr</find>
       <find>getPieceIcon</find>
@@ -169,16 +168,25 @@
       <find>getvalidpiecemoves</find>
       <find>getvalidpiec</find>
       <find>getpiecemoves</find>
-      <find>think</find>
       <find>system</find>
       <find>selecting best move</find>
       <find>selecting bes</find>
       <find>makemove</find>
       <find>getinstance</find>
       <find>getallvalid</find>
-      <find>selecting best move for</find>
-      <find>colorsmat</find>
       <find>ismove</find>
+      <find>selecting best move for</find>
+      <find>ispawn</find>
+      <find>isPawnMoveValid</find>
+      <find>isSpecificPieceMoveValid</find>
+      <find>think</find>
+      <find>doublemovingpawns</find>
+      <find>getinst</find>
+      <find>selectpiece</find>
+      <find>colorsmat</find>
+      <find>ispawnmove</find>
+      <find>broken</find>
+      <find>kingmove</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\walth_000\Documents\GitHub\chess_engine\src</dir>
@@ -209,16 +217,16 @@
         <option value="$PROJECT_DIR$/src/pieces/Queen.java" />
         <option value="$PROJECT_DIR$/src/pieces/Rook.java" />
         <option value="$PROJECT_DIR$/src/pieces/King.java" />
-        <option value="$PROJECT_DIR$/src/engine/OpeningBook.java" />
         <option value="$PROJECT_DIR$/src/board/BoardFactory.java" />
         <option value="$PROJECT_DIR$/src/engine/ComputeThread.java" />
-        <option value="$PROJECT_DIR$/src/engine/ChessEngine.java" />
         <option value="$PROJECT_DIR$/src/pieces/ButtonPiece.java" />
         <option value="$PROJECT_DIR$/src/board/AbstractBoard.java" />
         <option value="$PROJECT_DIR$/src/board/BoardState.java" />
-        <option value="$PROJECT_DIR$/src/application/GraphicalBoard.java" />
-        <option value="$PROJECT_DIR$/src/board/BitBoard.java" />
+        <option value="$PROJECT_DIR$/src/engine/ChessEngine.java" />
+        <option value="$PROJECT_DIR$/src/engine/OpeningBook.java" />
         <option value="$PROJECT_DIR$/src/pieces/BitPieces.java" />
+        <option value="$PROJECT_DIR$/src/board/BitBoard.java" />
+        <option value="$PROJECT_DIR$/src/application/GraphicalBoard.java" />
       </list>
     </option>
   </component>
@@ -285,7 +293,8 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535035296564" />
+    <property name="SearchEverywhereHistoryKey" value="openin&#9;FILE&#9;file://C:/Users/walth_000/Documents/GitHub/chess_engine/src/engine/OpeningBook.java" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535050321612" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
   <component name="RecentsManager">
@@ -352,8 +361,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3295964" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3295964" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39910313" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3295964" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39910313" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -373,6 +382,24 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/board/BitBoard.java</url>
+          <line>701</line>
+          <properties />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/board/BitBoard.java</url>
+          <line>173</line>
+          <properties />
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="jar://C:/Program Files (x86)/Java/jdk1.8.0_171/src.zip!/java/awt/image/BufferedImage.java">
@@ -495,24 +522,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/engine/OpeningBook.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-943">
-          <caret line="40" column="49" lean-forward="true" selection-start-line="40" selection-start-column="49" selection-end-line="40" selection-end-column="49" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/board/BoardFactory.java" />
-    <entry file="file://$PROJECT_DIR$/src/pieces/Queen.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pieces/ButtonPiece.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -542,10 +552,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/application/GraphicalBoard.java">
+    <entry file="file://$PROJECT_DIR$/src/engine/ChessEngine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="434" selection-start-line="434" selection-end-line="434" />
+        <state relative-caret-position="119">
+          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pieces/Queen.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/engine/OpeningBook.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-493">
+          <caret line="13" column="34" lean-forward="true" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -554,28 +581,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/board/AbstractBoard.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="54" column="34" selection-start-line="54" selection-start-column="34" selection-end-line="54" selection-end-column="34" />
+        <state relative-caret-position="305">
+          <caret line="23" column="27" lean-forward="true" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/engine/ChessEngine.java">
+    <entry file="file://$PROJECT_DIR$/src/pieces/BitPieces.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-371">
-          <caret line="117" column="48" lean-forward="true" selection-start-line="117" selection-start-column="48" selection-end-line="117" selection-end-column="48" />
+        <state relative-caret-position="173">
+          <caret line="65" column="7" selection-start-line="65" selection-start-column="7" selection-end-line="65" selection-end-column="7" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#970#971#0" expanded="true" />
+            <element signature="e#1022#1023#0" expanded="true" />
+            <element signature="e#1388#1389#0" expanded="true" />
+            <element signature="e#1444#1445#0" expanded="true" />
+            <element signature="e#1609#1610#0" expanded="true" />
+            <element signature="e#1669#1670#0" expanded="true" />
+            <element signature="e#1839#1840#0" expanded="true" />
+            <element signature="e#1902#1903#0" expanded="true" />
+            <element signature="e#2283#2284#0" expanded="true" />
+            <element signature="e#2342#2343#0" expanded="true" />
+            <element signature="e#2507#2508#0" expanded="true" />
+            <element signature="e#2564#2565#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/board/BitBoard.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="626" selection-start-line="626" selection-end-line="626" />
+        <state relative-caret-position="71">
+          <caret line="715" column="64" selection-start-line="715" selection-start-column="64" selection-end-line="715" selection-end-column="64" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1561#1562#0" expanded="true" />
@@ -584,18 +622,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pieces/BitPieces.java">
+    <entry file="file://$PROJECT_DIR$/src/application/GraphicalBoard.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="57" column="67" selection-start-line="57" selection-start-column="67" selection-end-line="57" selection-end-column="67" />
+        <state relative-caret-position="190">
+          <caret line="282" column="29" selection-start-line="282" selection-start-column="29" selection-end-line="282" selection-end-column="29" />
           <folding>
-            <element signature="e#970#971#0" expanded="true" />
-            <element signature="e#1022#1023#0" expanded="true" />
-            <element signature="e#1902#1903#0" expanded="true" />
-            <element signature="e#2283#2284#0" expanded="true" />
-            <element signature="e#2342#2343#0" expanded="true" />
-            <element signature="e#2507#2508#0" expanded="true" />
-            <element signature="e#2564#2565#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

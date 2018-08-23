@@ -201,8 +201,17 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         board[move.getStartPosition()] = EMPTY_PIECE;
         byte piece = board[move.getEndPosition()];
         if (BitPieces.isPiecePawn(piece)){
-            if (BitPieces.doubleMoving(piece)){
+            Color fromColor = BitPieces.isPieceWhite(board[move.getStartPosition()]) ? Color.WHITE : Color.BLACK;
+            int offset = 1;
+            if (fromColor == Color.WHITE){
+                offset = -1;
+            }
+            if (playerColor == Color.BLACK){
+                offset *= -1;
+            }
+            if (move.getStartPosition() + 20 * offset == move.getEndPosition()){
                 piece = BitPieces.doubleMovePiece(piece);
+                board[move.getEndPosition()] = piece;
                 doubleMovingPawns[0] = move.getEndPosition();
             }
             if (pawnQueening(piece, move.getEndPosition())){
@@ -689,14 +698,14 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             //rest is en passant rules
             else if (fromPiece + 9 * offset == toPiece){
                 byte potentialPawn = board[fromPiece - offset];
-                if (BitPieces.isPiecePawn(potentialPawn)){
-                    return (doubleMovingPawns[0] == potentialPawn && !BitPieces.colorsMatch(board[fromPiece], board[toPiece]));
+                if (BitPieces.isPiecePawn(potentialPawn) && !BitPieces.colorsMatch(potentialPawn, board[fromPiece])){
+                    return (doubleMovingPawns[0] == (fromPiece - offset) && !BitPieces.colorsMatch(board[fromPiece], board[toPiece]));
                 }
             }
             else if (fromPiece + 11 * offset == toPiece){
                 byte potentialPawn = board[fromPiece+ offset];
-                if (BitPieces.isPiecePawn(potentialPawn)){
-                    return (doubleMovingPawns[0] == potentialPawn && !BitPieces.colorsMatch(board[fromPiece], board[toPiece]));
+                if (BitPieces.isPiecePawn(potentialPawn) && !BitPieces.colorsMatch(potentialPawn, board[fromPiece])){
+                    return (doubleMovingPawns[0] == (fromPiece + offset) && !BitPieces.colorsMatch(board[fromPiece], board[toPiece]));
                 }
             }
         }
@@ -724,7 +733,7 @@ public class BitBoard extends AbstractBoard<BitBoard>{
                 return false;
             }
         }
-        if (toPiece == EMPTY_PIECE || !BitPieces.colorsMatch(board[fromPiece], board[toPiece])){
+        if (board[toPiece] == EMPTY_PIECE || !BitPieces.colorsMatch(board[fromPiece], board[toPiece])){
             return true;
         }
         return false;

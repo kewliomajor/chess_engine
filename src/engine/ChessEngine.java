@@ -3,7 +3,6 @@ package engine;
 import application.CheckmateException;
 import application.StalemateException;
 import board.AbstractBoard;
-import board.BoardState;
 import pieces.Color;
 import pieces.Move;
 

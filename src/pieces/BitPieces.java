@@ -24,7 +24,7 @@ public class BitPieces {
     public static byte BLACK_KING = (byte)134;
 
     public static boolean pieceHasMoved(byte piece){
-        return (piece & HAS_MOVED_MASK) == 1;
+        return (piece & HAS_MOVED_MASK) != 0;
     }
 
     public static byte movePiece(byte piece){

@@ -1,7 +1,6 @@
 package engine;
 
 import board.AbstractBoard;
-import board.BoardState;
 import pieces.Color;
 import pieces.Move;
 
