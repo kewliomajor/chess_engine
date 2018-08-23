@@ -7,6 +7,7 @@ public class BitPieces {
     private static byte HAS_MOVED_MASK = 0x8;
     private static byte HAS_CASTLED_MASK = (byte)16;
     private static byte DOUBLE_MOVING_MASK = (byte)32;
+    private static byte PIECE_MASK = 0x7;
 
     public static byte WHITE_PAWN = 0x1;
     public static byte WHITE_ROOK = 0x4;
@@ -59,27 +60,31 @@ public class BitPieces {
     }
 
     public static boolean isPieceKing(byte piece){
-        return (piece & WHITE_KING) != 0;
+        return (piece & PIECE_MASK) == WHITE_KING;
     }
 
     public static boolean isPieceQueen(byte piece){
-        return (piece & WHITE_QUEEN) != 0;
+        return (piece & PIECE_MASK) == WHITE_QUEEN;
     }
 
     public static boolean isPieceRook(byte piece){
-        return (piece & WHITE_ROOK) != 0;
+        return (piece & PIECE_MASK) == WHITE_ROOK;
     }
 
     public static boolean isPieceKnight(byte piece){
-        return (piece & WHITE_KNIGHT) != 0;
+        return (piece & PIECE_MASK) == WHITE_KNIGHT;
     }
 
     public static boolean isPieceBishop(byte piece){
-        return (piece & WHITE_BISHOP) != 0;
+        return (piece & PIECE_MASK) == WHITE_BISHOP;
     }
 
     public static boolean isPiecePawn(byte piece){
-        return (piece & WHITE_PAWN) != 0;
+        return (piece & PIECE_MASK) == WHITE_PAWN;
+    }
+
+    private static int getStrippedPiece(byte piece){
+        return piece & PIECE_MASK;
     }
 
     public static byte colorKing(Color color){
