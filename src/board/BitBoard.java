@@ -214,7 +214,7 @@ public class BitBoard extends AbstractBoard<BitBoard>{
                 board[move.getEndPosition()] = piece;
                 doubleMovingPawns[0] = move.getEndPosition();
             }
-            if (pawnQueening(piece, move.getEndPosition())){
+            if (pawnQueening(move.getEndPosition())){
                 byte newQueen = BitPieces.isPieceWhite(piece) ? WHITE_QUEEN : BLACK_QUEEN;
                 board[move.getEndPosition()] = newQueen;
             }
@@ -230,32 +230,25 @@ public class BitBoard extends AbstractBoard<BitBoard>{
     }
 
 
-    private boolean pawnQueening(byte pawn, int position){
-        if (BitPieces.isPieceWhite(pawn)){
-            switch(position){
-                case 91:
-                case 92:
-                case 93:
-                case 94:
-                case 95:
-                case 96:
-                case 97:
-                case 98:
-                    return true;
-            }
-        }
-        else{
-            switch(position){
-                case 21:
-                case 22:
-                case 23:
-                case 24:
-                case 25:
-                case 26:
-                case 27:
-                case 28:
-                    return true;
-            }
+    private boolean pawnQueening(int position){
+        switch(position) {
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+            case 28:
+            case 91:
+            case 92:
+            case 93:
+            case 94:
+            case 95:
+            case 96:
+            case 97:
+            case 98:
+                return true;
         }
         return false;
     }
@@ -335,10 +328,11 @@ public class BitBoard extends AbstractBoard<BitBoard>{
     }
 
     private boolean horizontalVerticalChecks(int targetKing){
+        //TODO fix, wasn't able to detect far away rook, diagonal probably broken as well
         for (int i = targetKing+10; i < BOARD_SIZE; i+= 10){
             byte potentialRookQueen = board[i];
             if (potentialRookQueen == EMPTY_PIECE){
-                break;
+                continue;
             }
             if (potentialRookQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialRookQueen, board[targetKing])){
                 break;
@@ -350,7 +344,7 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         for (int i = targetKing-10; i > 0; i-= 10){
             byte potentialRookQueen = board[i];
             if (potentialRookQueen == EMPTY_PIECE){
-                break;
+                continue;
             }
             if (potentialRookQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialRookQueen, board[targetKing])){
                 break;
@@ -362,7 +356,7 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         for (int i = targetKing+1; i < targetKing+8; i++){
             byte potentialRookQueen = board[i];
             if (potentialRookQueen == EMPTY_PIECE){
-                break;
+                continue;
             }
             if (potentialRookQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialRookQueen, board[targetKing])){
                 break;
@@ -374,7 +368,7 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         for (int i = targetKing-1; i > targetKing-8; i--){
             byte potentialRookQueen = board[i];
             if (potentialRookQueen == EMPTY_PIECE){
-                break;
+                continue;
             }
             if (potentialRookQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialRookQueen, board[targetKing])){
                 break;
