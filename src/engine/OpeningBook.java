@@ -20,6 +20,7 @@ public class OpeningBook extends DefaultTreeModel {
     private Move c4;
     private Move d4;
     private Move e4;
+    private Move e4xd5;
     private Move we5;
     private Move Nc3;
     private Move Nf3;
@@ -32,7 +33,9 @@ public class OpeningBook extends DefaultTreeModel {
     private Move d6;
     private Move e5;
     private Move e6;
+    private Move e6xd5;
     private Move Nc6;
+    private Move Ne7;
     private Move Nf6;
     private Move Bb7;
     private Move Bf5;
@@ -54,6 +57,7 @@ public class OpeningBook extends DefaultTreeModel {
         c4 = new Move(whiteKingStartPos+12*offset, whiteKingStartPos+32*offset);
         d4 = new Move(whiteKingStartPos+11*offset, whiteKingStartPos+31*offset);
         e4 = new Move(whiteKingStartPos+10*offset, whiteKingStartPos+30*offset);
+        e4xd5 = new Move(whiteKingStartPos+30*offset, whiteKingStartPos+41*offset);
         we5 = new Move(whiteKingStartPos+30*offset, whiteKingStartPos+40*offset);
         Nc3 = new Move(whiteKingStartPos+3*offset, whiteKingStartPos+22*offset);
         Nf3 = new Move(whiteKingStartPos-2*offset, whiteKingStartPos+19*offset);
@@ -65,7 +69,9 @@ public class OpeningBook extends DefaultTreeModel {
         d6 = new Move(whiteKingStartPos+61*offset, whiteKingStartPos+51*offset);
         e5 = new Move(whiteKingStartPos+60*offset, whiteKingStartPos+40*offset);
         e6 = new Move(whiteKingStartPos+60*offset, whiteKingStartPos+50*offset);
+        e6xd5 = new Move(whiteKingStartPos+50*offset, whiteKingStartPos+41*offset);
         Nc6 = new Move(whiteKingStartPos+73*offset, whiteKingStartPos+52*offset);
+        Ne7 = new Move(whiteKingStartPos+68*offset, whiteKingStartPos+60*offset);
         Nf6 = new Move(whiteKingStartPos+68*offset, whiteKingStartPos+49*offset);
         Bb7 = new Move(whiteKingStartPos+72*offset, whiteKingStartPos+63*offset);
         Bf5 = new Move(whiteKingStartPos+72*offset, whiteKingStartPos+39*offset);
@@ -112,6 +118,7 @@ public class OpeningBook extends DefaultTreeModel {
         insertNodeInto(getSicilianBookTree(), kingPawnMove, 0);
         insertNodeInto(getFrenchBookTree(), kingPawnMove, 0);
         insertNodeInto(getCaroKannBookTree(), kingPawnMove, 0);
+        insertNodeInto(getB6BookTree(), kingPawnMove, 0);
 
         return kingPawnMove;
     }
@@ -145,8 +152,28 @@ public class OpeningBook extends DefaultTreeModel {
 
         insertNodeInto(frenchd4, french, 0);
         insertNodeInto(frenchd4d5, frenchd4, 0);
+        insertNodeInto(getFrenchExchangeBookTree(), frenchd4d5, 0);
+        insertNodeInto(getFrenchAdvanceBookTree(), frenchd4d5, 1);
 
         return french;
+    }
+
+    private MoveTreeNode getFrenchExchangeBookTree(){
+        MoveTreeNode exchange = new MoveTreeNode(e4xd5);
+        MoveTreeNode exchangeexd5 = new MoveTreeNode(e6xd5);
+
+        insertNodeInto(exchangeexd5, exchange, 0);
+
+        return exchange;
+    }
+
+    private MoveTreeNode getFrenchAdvanceBookTree(){
+        MoveTreeNode advance = new MoveTreeNode(we5);
+        MoveTreeNode advanceNe7 = new MoveTreeNode(Ne7);
+
+        insertNodeInto(advanceNe7, advance, 0);
+
+        return advance;
     }
 
     private MoveTreeNode getCaroKannBookTree(){
@@ -162,6 +189,19 @@ public class OpeningBook extends DefaultTreeModel {
         insertNodeInto(carokannd4d5e5Bf5, carokannd4d5e5, 0);
 
         return carokann;
+    }
+
+    private MoveTreeNode getB6BookTree(){
+        MoveTreeNode defenseb6 = new MoveTreeNode(b6);
+        MoveTreeNode defenseb6d4 = new MoveTreeNode(d4);
+        MoveTreeNode defenseb6d4Bb7 = new MoveTreeNode(Bb7);
+        MoveTreeNode defenseb6d4Bb7Nc3 = new MoveTreeNode(Nc3);
+
+        insertNodeInto(defenseb6d4, defenseb6, 0);
+        insertNodeInto(defenseb6d4Bb7, defenseb6d4, 0);
+        insertNodeInto(defenseb6d4Bb7Nc3, defenseb6d4Bb7, 0);
+
+        return defenseb6;
     }
 
     private MoveTreeNode getQueenPawnBookTree(){

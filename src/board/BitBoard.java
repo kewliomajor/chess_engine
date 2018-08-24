@@ -22,12 +22,26 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         return new BitBoard((BitBoard) board);
     }
 
+    @Override
+    public BitBoard getInstance(Color playerColor) {
+        return new BitBoard(playerColor);
+    }
+
     /**
      * Creates a board with all pieces in the starting formation
      */
     public BitBoard(Color playerColor){
         moveHistory = new ArrayList<>();
         setupStartingPieces(playerColor);
+        this.playerColor = playerColor;
+    }
+
+
+    public BitBoard(Color playerColor, boolean debug){
+        whiteKingPosition = 94;
+        blackKingPosition = 24;
+        moveHistory = new ArrayList<>();
+        setupDebugPosition(playerColor);
         this.playerColor = playerColor;
     }
 
@@ -122,7 +136,7 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             if (BitPieces.isPieceWhite(piece) == (currentMove == Color.BLACK)){
                 offset = -1;
             }
-            double score = getPieceValue(piece) * offset;
+            double score = getPieceValue(piece, i) * offset;
             boardScore += score;
         }
         if (!whiteHasMoves){
@@ -141,22 +155,26 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         return boardScore;
     }
 
-    private double getPieceValue(byte piece){
+    private double getPieceValue(byte piece, int position){
         double value;
         if (BitPieces.isPieceKing(piece)){
             value = 0;
         }
         else if (BitPieces.isPieceQueen(piece)){
             value = 9;
+            value += (getValidPieceMoves(position).size() * 0.025);
         }
         else if (BitPieces.isPieceRook(piece)){
             value = 5;
+            value += (getValidPieceMoves(position).size() * 0.025);
         }
         else if (BitPieces.isPieceKnight(piece)){
             value = 3;
+            value += (getValidPieceMoves(position).size() * 0.025);
         }
         else if (BitPieces.isPieceBishop(piece)){
             value = 3;
+            value += (getValidPieceMoves(position).size() * 0.025);
         }
         else if (BitPieces.isPiecePawn(piece)){
             value = 1;
@@ -340,6 +358,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             if ((BitPieces.isPieceRook(potentialRookQueen) || BitPieces.isPieceQueen(potentialRookQueen))){
                 return true;
             }
+            else{
+                break;
+            }
         }
         for (int i = targetKing-10; i > 0; i-= 10){
             byte potentialRookQueen = board[i];
@@ -351,6 +372,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             }
             if ((BitPieces.isPieceRook(potentialRookQueen) || BitPieces.isPieceQueen(potentialRookQueen))){
                 return true;
+            }
+            else{
+                break;
             }
         }
         for (int i = targetKing+1; i < targetKing+8; i++){
@@ -364,6 +388,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             if ((BitPieces.isPieceRook(potentialRookQueen) || BitPieces.isPieceQueen(potentialRookQueen))){
                 return true;
             }
+            else{
+                break;
+            }
         }
         for (int i = targetKing-1; i > targetKing-8; i--){
             byte potentialRookQueen = board[i];
@@ -375,6 +402,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             }
             if ((BitPieces.isPieceRook(potentialRookQueen) || BitPieces.isPieceQueen(potentialRookQueen))){
                 return true;
+            }
+            else{
+                break;
             }
         }
         return false;
@@ -392,6 +422,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             if ((BitPieces.isPieceBishop(potentialBishopQueen) || BitPieces.isPieceQueen(potentialBishopQueen))){
                 return true;
             }
+            else{
+                break;
+            }
         }
         for (int i = targetKing+9; i < BOARD_SIZE; i+= 9){
             byte potentialBishopQueen = board[i];
@@ -403,6 +436,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             }
             if ((BitPieces.isPieceBishop(potentialBishopQueen) || BitPieces.isPieceQueen(potentialBishopQueen))){
                 return true;
+            }
+            else{
+                break;
             }
         }
         for (int i = targetKing-11; i > 0; i-= 11){
@@ -416,6 +452,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             if ((BitPieces.isPieceBishop(potentialBishopQueen) || BitPieces.isPieceQueen(potentialBishopQueen))){
                 return true;
             }
+            else{
+                break;
+            }
         }
         for (int i = targetKing-9; i > 0; i-= 9){
             byte potentialBishopQueen = board[i];
@@ -427,6 +466,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             }
             if ((BitPieces.isPieceBishop(potentialBishopQueen) || BitPieces.isPieceQueen(potentialBishopQueen))){
                 return true;
+            }
+            else{
+                break;
             }
         }
         return false;
@@ -806,6 +848,32 @@ public class BitBoard extends AbstractBoard<BitBoard>{
 
 
         return pieceString;
+    }
+
+
+    private void setupDebugPosition(Color playerColor){
+        for (int i = 0; i < BOARD_SIZE; i++){
+            int digit = i % 10;
+            if (i > 20 && i < 99 && digit != 0 && digit != 9){
+                board[i] = getDebugPieceForPosition(i, playerColor);
+            }
+            else{
+                board[i] = INVALID_PIECE;
+            }
+        }
+    }
+
+
+    private byte getDebugPieceForPosition(int position, Color playerColor){
+        Color engineColor = Color.getOpposite(playerColor);
+        switch (position){
+            case 25:
+                return BitPieces.colorPawn(engineColor);
+            case 44:
+                return BitPieces.colorPawn(playerColor);
+            default:
+                return EMPTY_PIECE;
+        }
     }
 
 

@@ -21,6 +21,8 @@ public abstract class AbstractBoard<T> {
 
     public abstract boolean pieceIsQueen(int position);
 
+    public abstract T getInstance(Color playerColor);
+
     public abstract T getInstance(AbstractBoard board);
 
     public List<Move> getMoveHistory(){

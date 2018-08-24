@@ -1,6 +1,7 @@
 package application;
 
 import board.AbstractBoard;
+import board.BitBoard;
 import board.BoardState;
 import engine.ChessEngine;
 import pieces.*;
@@ -23,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class GraphicalBoard {
+public class GraphicalBoard<T> {
 
     private static pieces.Color PLAYER_COLOR = pieces.Color.WHITE;
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
@@ -34,8 +35,8 @@ public class GraphicalBoard {
     private ButtonPiece currentlySelected;
     private ArrayList<ButtonPiece> currentValidMoves = new ArrayList<>();
     private ArrayList<ButtonPiece> lastComputerMove = new ArrayList<>();
-    private AbstractBoard boardState = new BoardState(PLAYER_COLOR);
-    private ChessEngine<BoardState> engine;
+    private AbstractBoard<T> boardState;
+    private ChessEngine<BitBoard> engine;
     private boolean waitingForComputer = false;
     private JLabel currentEval = new JLabel(EVAL_STRING, SwingConstants.LEFT);
 
@@ -70,7 +71,8 @@ public class GraphicalBoard {
                     GOLD_PAWN,   SILVER_PAWN));
 
 
-    public GraphicalBoard() {
+    public GraphicalBoard(AbstractBoard<T> boardState) {
+        this.boardState = boardState;
         engine = new ChessEngine(pieces.Color.getOpposite(PLAYER_COLOR));
         initializeGui();
     }
@@ -253,31 +255,10 @@ public class GraphicalBoard {
         return chessBoardSquares[x][y];
     }
 
-    public static void main(String[] args) {
-        Runnable r = () -> {
-            Thread.currentThread().setPriority(10);
-            GraphicalBoard graphicalBoard = new GraphicalBoard();
-            graphicalBoard.refreshGui();
-
-            JFrame frame = new JFrame("Cora's Chess Engine");
-            frame.add(graphicalBoard.getGui());
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setLocationByPlatform(true);
-
-            // ensures the frame is the minimum size it needs to be
-            // in order display the components within it
-            frame.pack();
-            // ensures the minimum size is enforced.
-            frame.setMinimumSize(frame.getSize());
-            frame.setVisible(true);
-        };
-        SwingUtilities.invokeLater(r);
-    }
-
 
     private void movePiece(ButtonPiece toButton, ButtonPiece fromButton){
         int startPosition = getBoardStatePositionFromButtonPosition(fromButton.getBoardX(), fromButton.getBoardY());
-        int endPosition = getBoardStatePositionFromButtonPosition(fromButton.getBoardX(), fromButton.getBoardY());
+        int endPosition = getBoardStatePositionFromButtonPosition(toButton.getBoardX(), toButton.getBoardY());
         //case for castling
         if (boardState.pieceIsKing(fromButton.getPiecePosition()) && (startPosition + 2 == endPosition || startPosition -2 == endPosition)){
             int rookPosition;
@@ -383,6 +364,7 @@ public class GraphicalBoard {
             Move move = engine.getBestMove(boardState);
             ButtonPiece fromPiece = getButtonFromBoardStatePosition(move.getStartPosition());
             ButtonPiece toPiece = getButtonFromBoardStatePosition(move.getEndPosition());
+            boardState.isMoveValid(move);
             movePiece(toPiece, fromPiece);
             toPiece.setBackground(Color.YELLOW);
             fromPiece.setBackground(Color.YELLOW);
@@ -419,13 +401,13 @@ public class GraphicalBoard {
 
     private void showWinner(pieces.Color color){
         JOptionPane.showMessageDialog(null, color + " wins!");
-        boardState = new BoardState(PLAYER_COLOR);
+        boardState = (AbstractBoard<T>) new BoardState(PLAYER_COLOR);
         initializeGui();
     }
 
     private void showDraw(){
         JOptionPane.showMessageDialog(null, "Draw!");
-        boardState = new BoardState(PLAYER_COLOR);
+        boardState = (AbstractBoard<T>) new BoardState(PLAYER_COLOR);
         initializeGui();
     }
 
@@ -467,7 +449,7 @@ public class GraphicalBoard {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            boardState = new BoardState(PLAYER_COLOR);
+            boardState = (AbstractBoard<T>) boardState.getInstance(PLAYER_COLOR);
             initializeGui();
         }
     }
@@ -485,7 +467,7 @@ public class GraphicalBoard {
         public void actionPerformed(ActionEvent e) {
             engine.setEngineColor(PLAYER_COLOR);
             PLAYER_COLOR = pieces.Color.getOpposite(PLAYER_COLOR);
-            boardState = new BoardState(PLAYER_COLOR);
+            boardState = (AbstractBoard<T>) boardState.getInstance(PLAYER_COLOR);
             initializeGui();
         }
     }

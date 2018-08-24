@@ -16,6 +16,11 @@ public class BoardState extends AbstractBoard<BoardState>{
 	public BoardState getInstance(AbstractBoard board) {
 		return new BoardState((BoardState) board);
 	}
+
+	@Override
+	public BoardState getInstance(Color playerColor) {
+		return new BoardState(playerColor);
+	}
 	
 	/**
 	 * Creates a board with all pieces in the starting formation
