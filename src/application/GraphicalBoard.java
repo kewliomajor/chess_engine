@@ -1,7 +1,7 @@
 package application;
 
 import board.AbstractBoard;
-import board.BitBoard;
+import board.ByteBoard;
 import board.BoardState;
 import engine.ChessEngine;
 import pieces.*;
@@ -36,7 +36,7 @@ public class GraphicalBoard<T> {
     private ArrayList<ButtonPiece> currentValidMoves = new ArrayList<>();
     private ArrayList<ButtonPiece> lastComputerMove = new ArrayList<>();
     private AbstractBoard<T> boardState;
-    private ChessEngine<BitBoard> engine;
+    private ChessEngine<ByteBoard> engine;
     private boolean waitingForComputer = false;
     private JLabel currentEval = new JLabel(EVAL_STRING, SwingConstants.LEFT);
 

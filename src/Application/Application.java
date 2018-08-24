@@ -1,7 +1,6 @@
 package application;
 
-import board.BitBoard;
-import board.BoardState;
+import board.ByteBoard;
 import pieces.Color;
 
 import javax.swing.*;
@@ -10,7 +9,7 @@ public class Application {
     public static void main(String[] args) {
         Runnable r = () -> {
             Thread.currentThread().setPriority(10);
-            GraphicalBoard<BitBoard> graphicalBoard = new GraphicalBoard<>(new BitBoard(Color.WHITE));
+            GraphicalBoard<ByteBoard> graphicalBoard = new GraphicalBoard<>(new ByteBoard(Color.WHITE));
             graphicalBoard.refreshGui();
 
             JFrame frame = new JFrame("Cora's Chess Engine");
