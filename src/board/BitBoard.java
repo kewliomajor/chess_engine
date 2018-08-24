@@ -200,8 +200,8 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         board[move.getEndPosition()] = BitPieces.movePiece(board[move.getStartPosition()]);
         board[move.getStartPosition()] = EMPTY_PIECE;
         byte piece = board[move.getEndPosition()];
+        Color fromColor = BitPieces.isPieceWhite(board[move.getEndPosition()]) ? Color.WHITE : Color.BLACK;
         if (BitPieces.isPiecePawn(piece)){
-            Color fromColor = BitPieces.isPieceWhite(board[move.getStartPosition()]) ? Color.WHITE : Color.BLACK;
             int offset = 1;
             if (fromColor == Color.WHITE){
                 offset = -1;
@@ -217,6 +217,14 @@ public class BitBoard extends AbstractBoard<BitBoard>{
             if (pawnQueening(piece, move.getEndPosition())){
                 byte newQueen = BitPieces.isPieceWhite(piece) ? WHITE_QUEEN : BLACK_QUEEN;
                 board[move.getEndPosition()] = newQueen;
+            }
+        }
+        else if (BitPieces.isPieceKing(piece)){
+            if (fromColor == Color.WHITE){
+                whiteKingPosition = move.getEndPosition();
+            }
+            else{
+                blackKingPosition = move.getEndPosition();
             }
         }
     }
@@ -459,6 +467,9 @@ public class BitBoard extends AbstractBoard<BitBoard>{
                 validMoves.add(move);
             }
         }
+        if (BitPieces.isPieceKing(board[position]) && !BitPieces.isPieceWhite(board[position])){
+            //System.out.println("black king has " + validMoves.size() + " valid moves out of " + getPieceMoves(position).size() + " total moves");
+        }
         return validMoves;
     }
 
@@ -692,20 +703,20 @@ public class BitBoard extends AbstractBoard<BitBoard>{
         }
         //capturing
         else{
-            if (toPiece != EMPTY_PIECE && toPiece != INVALID_PIECE && !BitPieces.colorsMatch(board[fromPiece], board[toPiece])){
+            if (board[toPiece] != EMPTY_PIECE && board[toPiece] != INVALID_PIECE && !BitPieces.colorsMatch(board[fromPiece], board[toPiece])){
                 return true;
             }
             //rest is en passant rules
             else if (fromPiece + 9 * offset == toPiece){
                 byte potentialPawn = board[fromPiece - offset];
                 if (BitPieces.isPiecePawn(potentialPawn) && !BitPieces.colorsMatch(potentialPawn, board[fromPiece])){
-                    return (doubleMovingPawns[0] == (fromPiece - offset) && !BitPieces.colorsMatch(board[fromPiece], board[toPiece]));
+                    return (doubleMovingPawns[0] == (fromPiece - offset));
                 }
             }
             else if (fromPiece + 11 * offset == toPiece){
                 byte potentialPawn = board[fromPiece+ offset];
                 if (BitPieces.isPiecePawn(potentialPawn) && !BitPieces.colorsMatch(potentialPawn, board[fromPiece])){
-                    return (doubleMovingPawns[0] == (fromPiece + offset) && !BitPieces.colorsMatch(board[fromPiece], board[toPiece]));
+                    return (doubleMovingPawns[0] == (fromPiece + offset));
                 }
             }
         }
