@@ -337,50 +337,50 @@ public class BitBoard extends AbstractBoard<BitBoard>{
     private boolean horizontalVerticalChecks(int targetKing){
         for (int i = targetKing+10; i < BOARD_SIZE; i+= 10){
             byte potentialRookQueen = board[i];
+            if (potentialRookQueen == EMPTY_PIECE){
+                break;
+            }
             if (potentialRookQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialRookQueen, board[targetKing])){
                 break;
             }
             if ((BitPieces.isPieceRook(potentialRookQueen) || BitPieces.isPieceQueen(potentialRookQueen))){
                 return true;
-            }
-            else if (potentialRookQueen != EMPTY_PIECE){
-                break;
             }
         }
         for (int i = targetKing-10; i > 0; i-= 10){
             byte potentialRookQueen = board[i];
+            if (potentialRookQueen == EMPTY_PIECE){
+                break;
+            }
             if (potentialRookQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialRookQueen, board[targetKing])){
                 break;
             }
             if ((BitPieces.isPieceRook(potentialRookQueen) || BitPieces.isPieceQueen(potentialRookQueen))){
                 return true;
-            }
-            else if (potentialRookQueen != EMPTY_PIECE){
-                break;
             }
         }
         for (int i = targetKing+1; i < targetKing+8; i++){
             byte potentialRookQueen = board[i];
+            if (potentialRookQueen == EMPTY_PIECE){
+                break;
+            }
             if (potentialRookQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialRookQueen, board[targetKing])){
                 break;
             }
             if ((BitPieces.isPieceRook(potentialRookQueen) || BitPieces.isPieceQueen(potentialRookQueen))){
                 return true;
-            }
-            else if (potentialRookQueen != EMPTY_PIECE){
-                break;
             }
         }
         for (int i = targetKing-1; i > targetKing-8; i--){
             byte potentialRookQueen = board[i];
+            if (potentialRookQueen == EMPTY_PIECE){
+                break;
+            }
             if (potentialRookQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialRookQueen, board[targetKing])){
                 break;
             }
             if ((BitPieces.isPieceRook(potentialRookQueen) || BitPieces.isPieceQueen(potentialRookQueen))){
                 return true;
-            }
-            else if (potentialRookQueen != EMPTY_PIECE){
-                break;
             }
         }
         return false;
@@ -389,50 +389,50 @@ public class BitBoard extends AbstractBoard<BitBoard>{
     private boolean diagonalChecks(int targetKing){
         for (int i = targetKing+11; i < BOARD_SIZE; i+= 11){
             byte potentialBishopQueen = board[i];
+            if (potentialBishopQueen == EMPTY_PIECE){
+                continue;
+            }
             if (potentialBishopQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialBishopQueen, board[targetKing])){
                 break;
             }
             if ((BitPieces.isPieceBishop(potentialBishopQueen) || BitPieces.isPieceQueen(potentialBishopQueen))){
                 return true;
-            }
-            else if (potentialBishopQueen != EMPTY_PIECE){
-                break;
             }
         }
         for (int i = targetKing+9; i < BOARD_SIZE; i+= 9){
             byte potentialBishopQueen = board[i];
+            if (potentialBishopQueen == EMPTY_PIECE){
+                continue;
+            }
             if (potentialBishopQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialBishopQueen, board[targetKing])){
                 break;
             }
             if ((BitPieces.isPieceBishop(potentialBishopQueen) || BitPieces.isPieceQueen(potentialBishopQueen))){
                 return true;
-            }
-            else if (potentialBishopQueen != EMPTY_PIECE){
-                break;
             }
         }
         for (int i = targetKing-11; i > 0; i-= 11){
             byte potentialBishopQueen = board[i];
+            if (potentialBishopQueen == EMPTY_PIECE){
+                continue;
+            }
             if (potentialBishopQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialBishopQueen, board[targetKing])){
                 break;
             }
             if ((BitPieces.isPieceBishop(potentialBishopQueen) || BitPieces.isPieceQueen(potentialBishopQueen))){
                 return true;
-            }
-            else if (potentialBishopQueen != EMPTY_PIECE){
-                break;
             }
         }
         for (int i = targetKing-9; i > 0; i-= 9){
             byte potentialBishopQueen = board[i];
+            if (potentialBishopQueen == EMPTY_PIECE){
+                continue;
+            }
             if (potentialBishopQueen == INVALID_PIECE || BitPieces.colorsMatch(potentialBishopQueen, board[targetKing])){
                 break;
             }
             if ((BitPieces.isPieceBishop(potentialBishopQueen) || BitPieces.isPieceQueen(potentialBishopQueen))){
                 return true;
-            }
-            else if (potentialBishopQueen != EMPTY_PIECE){
-                break;
             }
         }
         return false;
