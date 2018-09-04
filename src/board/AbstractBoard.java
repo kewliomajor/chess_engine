@@ -7,6 +7,10 @@ import java.util.List;
 
 public abstract class AbstractBoard<T> {
 
+    public enum MoveEffect {
+        NONE, CASTLE_KINGSIDE, CASTLE_QUEENSIDE, QUEENING_PAWN
+    }
+
     public static final int BOARD_SIZE = 120;
     protected static final int CHECKMATE_SCORE = 1000;
 
@@ -16,10 +20,6 @@ public abstract class AbstractBoard<T> {
     protected List<Move> moveHistory;
 
     public abstract boolean pieceIsInvalid(int position);
-
-    public abstract boolean pieceIsKing(int position);
-
-    public abstract boolean pieceIsQueen(int position);
 
     public abstract T getInstance(Color playerColor);
 
@@ -52,13 +52,13 @@ public abstract class AbstractBoard<T> {
      *
      * @param move
      */
-    public void makeMove(Move move){
-        move(move);
+    public MoveEffect makeMove(Move move){
         currentMove = Color.getOpposite(currentMove);
         moveHistory.add(move);
+        return move(move);
     }
 
-    public abstract void move(Move move);
+    public abstract MoveEffect move(Move move);
 
     public abstract int getBlackKingPosition();
 
@@ -69,6 +69,12 @@ public abstract class AbstractBoard<T> {
     public abstract List<Move> getAllValidMoves(Color color);
 
     public abstract boolean isMoveValid(Move move);
+
+    public abstract int getGraphicalXFromPosition(int position);
+
+    public abstract int getGraphicalYFromPosition(int position);
+
+    public abstract int getBoardStatePositionFromGraphicalPosition(int x, int y);
 
     public abstract String toString();
 }

@@ -16,10 +16,6 @@ public class ButtonPiece extends JButton {
         this.boardY = boardY;
     }
 
-    public void setPiecePosition(int piecePosition){
-        this.piecePosition = piecePosition;
-    }
-
     public int getPiecePosition() {
         return piecePosition;
     }

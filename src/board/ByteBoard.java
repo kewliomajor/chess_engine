@@ -68,16 +68,6 @@ public class ByteBoard extends AbstractBoard<ByteBoard>{
     }
 
 
-    public boolean pieceIsKing(int position){
-        return BitPieces.isPieceKing(board[position]);
-    }
-
-
-    public boolean pieceIsQueen(int position){
-        return BitPieces.isPieceQueen(board[position]);
-    }
-
-
     public Color getPieceColor(int position){
         return BitPieces.isPieceWhite(board[position]) ? Color.WHITE : Color.BLACK;
     }
@@ -188,7 +178,8 @@ public class ByteBoard extends AbstractBoard<ByteBoard>{
         return value;
     }
 
-    public void move(Move move){
+    public MoveEffect move(Move move){
+        MoveEffect effect = MoveEffect.NONE;
         for (int i = 0; i < MAX_DOUBLE_MOVING_PAWNS; i++){
             int position = doubleMovingPawns[i];
             if (position != 0){
@@ -206,10 +197,12 @@ public class ByteBoard extends AbstractBoard<ByteBoard>{
                 offset = 1;
             }
             if (move.getStartPosition() + 2 == move.getEndPosition()){
+                effect = MoveEffect.CASTLE_KINGSIDE;
                 rookPosition = move.getStartPosition()+3 + offset;
                 futureRookPosition = move.getStartPosition()+1;
             }
             else{
+                effect = MoveEffect.CASTLE_QUEENSIDE;
                 rookPosition = move.getStartPosition()-4 + offset;
                 futureRookPosition = move.getStartPosition()-1;
             }
@@ -235,8 +228,22 @@ public class ByteBoard extends AbstractBoard<ByteBoard>{
                 doubleMovingPawns[0] = move.getEndPosition();
             }
             if (pawnQueening(move.getEndPosition())){
+                effect = MoveEffect.QUEENING_PAWN;
                 byte newQueen = BitPieces.isPieceWhite(piece) ? WHITE_QUEEN : BLACK_QUEEN;
                 board[move.getEndPosition()] = newQueen;
+            }
+            //rest is en passant rules
+            if (move.getStartPosition() + 9 * offset == move.getEndPosition()){
+                byte potentialPawn = board[move.getStartPosition() - offset];
+                if (BitPieces.isPiecePawn(potentialPawn)){
+                    board[move.getStartPosition() - offset] = EMPTY_PIECE;
+                }
+            }
+            else if (move.getStartPosition() + 11 * offset == move.getEndPosition()){
+                byte potentialPawn = board[move.getStartPosition() + offset];
+                if (BitPieces.isPiecePawn(potentialPawn)){
+                    board[move.getStartPosition() + offset] = EMPTY_PIECE;
+                }
             }
         }
         else if (BitPieces.isPieceKing(piece)){
@@ -247,6 +254,7 @@ public class ByteBoard extends AbstractBoard<ByteBoard>{
                 blackKingPosition = move.getEndPosition();
             }
         }
+        return effect;
     }
 
 
@@ -697,6 +705,27 @@ public class ByteBoard extends AbstractBoard<ByteBoard>{
         ByteBoard afterMoveBoard = new ByteBoard(this);
         afterMoveBoard.makeMove(move);
         return !afterMoveBoard.kingInCheck(currentMove);
+    }
+
+    @Override
+    public int getGraphicalXFromPosition(int position) {
+        position -= 20;
+        int x = (position%10) -1;
+
+        return x;
+    }
+
+    @Override
+    public int getGraphicalYFromPosition(int position) {
+        position -= 20;
+        int y = position/10;
+
+        return y;
+    }
+
+    @Override
+    public int getBoardStatePositionFromGraphicalPosition(int x, int y) {
+        return 20 + ((y * 10) + x + 1);
     }
 
     private boolean isSpecificPieceMoveValid(int from, int to){

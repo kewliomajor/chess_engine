@@ -232,25 +232,20 @@ public class GraphicalBoard<T> {
         return new ImageIcon(image);
     }
 
-    public final JComponent getChessBoard() {
-        return chessBoard;
-    }
-
     public final JComponent getGui() {
         return gui;
     }
 
     public int getBoardStatePositionFromButtonPosition(int x, int y){
-        return 20 + ((y * 10) + x + 1);
+        return boardState.getBoardStatePositionFromGraphicalPosition(x, y);
     }
 
     public ButtonPiece getButtonFromBoardStatePosition(int boardStatePos) {
         if (boardState.pieceIsInvalid(boardStatePos)){
             throw new RuntimeException("Requesting position outside of GUI bounds: " + boardStatePos);
         }
-        boardStatePos -= 20;
-        int x = (boardStatePos%10) -1;
-        int y = boardStatePos/10;
+        int x = boardState.getGraphicalXFromPosition(boardStatePos);
+        int y = boardState.getGraphicalYFromPosition(boardStatePos);
 
         return chessBoardSquares[x][y];
     }
@@ -259,44 +254,69 @@ public class GraphicalBoard<T> {
     private void movePiece(ButtonPiece toButton, ButtonPiece fromButton){
         int startPosition = getBoardStatePositionFromButtonPosition(fromButton.getBoardX(), fromButton.getBoardY());
         int endPosition = getBoardStatePositionFromButtonPosition(toButton.getBoardX(), toButton.getBoardY());
-        //case for castling
-        if (boardState.pieceIsKing(fromButton.getPiecePosition()) && (startPosition + 2 == endPosition || startPosition -2 == endPosition)){
-            int rookPosition;
-            int futureRookPosition;
-            int offset = 0;
-            if (PLAYER_COLOR == pieces.Color.BLACK){
-                offset = 1;
-            }
-            if (startPosition + 2 == endPosition){
-                rookPosition = startPosition+3 + offset;
-                futureRookPosition = startPosition+1;
-            }
-            else{
-                rookPosition = startPosition-4 + offset;
-                futureRookPosition = startPosition-1;
-            }
-            ButtonPiece rook = getButtonFromBoardStatePosition(rookPosition);
-            ButtonPiece futureRook = getButtonFromBoardStatePosition(futureRookPosition);
-            ImageIcon emptyIcon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
-            futureRook.setIcon(rook.getIcon());
-            rook.setIcon(emptyIcon);
-
-            moveNormally(toButton, fromButton);
-        }
-        else{
-            moveNormally(toButton, fromButton);
+        System.out.println("making move from " + startPosition + " to " + endPosition);
+        AbstractBoard.MoveEffect effect = boardState.makeMove(new Move(startPosition, endPosition));
+        switch (effect){
+            case CASTLE_KINGSIDE:
+                castleKingside(startPosition);
+                moveNormally(toButton, fromButton);
+                break;
+            case CASTLE_QUEENSIDE:
+                castleQueenside(startPosition);
+                moveNormally(toButton, fromButton);
+                break;
+            case QUEENING_PAWN:
+                queeningPawn(toButton, fromButton, endPosition);
+                break;
+            case NONE:
+                moveNormally(toButton, fromButton);
+                break;
+            default:
+                throw new RuntimeException("Post move effect not supported: " + effect);
         }
     }
 
-    private void moveNormally(ButtonPiece button, ButtonPiece fromButton){
-        int startPosition = fromButton.getPiecePosition();
-        int endPosition = button.getPiecePosition();
-        System.out.println("making move from " + startPosition + " to " + endPosition);
-        boardState.makeMove(new Move(startPosition, endPosition));
-        ImageIcon currentIcon = (ImageIcon)fromButton.getIcon();
-        if (boardState.pieceIsQueen(endPosition)){
-            currentIcon = getPieceIcon(boardState.getPieceString(endPosition).trim(), boardState.getPieceColor(endPosition));
+    private void castleKingside(int startPosition){
+        int rookPosition;
+        int futureRookPosition;
+        int offset = 0;
+        if (PLAYER_COLOR == pieces.Color.BLACK){
+            offset = 1;
         }
+        rookPosition = startPosition+3 + offset;
+        futureRookPosition = startPosition+1;
+        ButtonPiece rook = getButtonFromBoardStatePosition(rookPosition);
+        ButtonPiece futureRook = getButtonFromBoardStatePosition(futureRookPosition);
+        ImageIcon emptyIcon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
+        futureRook.setIcon(rook.getIcon());
+        rook.setIcon(emptyIcon);
+    }
+
+    private void castleQueenside(int startPosition){
+        int rookPosition;
+        int futureRookPosition;
+        int offset = 0;
+        if (PLAYER_COLOR == pieces.Color.BLACK){
+            offset = 1;
+        }
+        rookPosition = startPosition-4 + offset;
+        futureRookPosition = startPosition-1;
+        ButtonPiece rook = getButtonFromBoardStatePosition(rookPosition);
+        ButtonPiece futureRook = getButtonFromBoardStatePosition(futureRookPosition);
+        ImageIcon emptyIcon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
+        futureRook.setIcon(rook.getIcon());
+        rook.setIcon(emptyIcon);
+    }
+
+    private void queeningPawn(ButtonPiece button, ButtonPiece fromButton, int endPosition){
+        ImageIcon currentIcon = getPieceIcon("Q", boardState.getPieceColor(endPosition));
+        fromButton.setIcon(new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB)));
+        fromButton.setBackground(fromButton.getColor());
+        button.setIcon(currentIcon);
+    }
+
+    private void moveNormally(ButtonPiece button, ButtonPiece fromButton){
+        ImageIcon currentIcon = (ImageIcon)fromButton.getIcon();
         fromButton.setIcon(new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB)));
         fromButton.setBackground(fromButton.getColor());
         button.setIcon(currentIcon);
@@ -362,6 +382,7 @@ public class GraphicalBoard<T> {
         lastComputerMove.clear();
         try{
             Move move = engine.getBestMove(boardState);
+            System.out.println(move.getStartPosition() + " " + move.getEndPosition());
             ButtonPiece fromPiece = getButtonFromBoardStatePosition(move.getStartPosition());
             ButtonPiece toPiece = getButtonFromBoardStatePosition(move.getEndPosition());
             boardState.isMoveValid(move);

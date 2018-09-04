@@ -87,14 +87,6 @@ public class BoardState extends AbstractBoard<BoardState>{
 		return board[position] instanceof InvalidPiece;
 	}
 
-	public boolean pieceIsKing(int position){
-		return board[position] instanceof King;
-	}
-
-	public boolean pieceIsQueen(int position){
-		return board[position] instanceof Queen;
-	}
-
 	public Color getPieceColor(int position){
 		return board[position].getColor();
 	}
@@ -180,18 +172,6 @@ public class BoardState extends AbstractBoard<BoardState>{
 		return boardScore;
 	}
 
-
-	/**
-	 * Excepts that the move is valid, must check isMoveValid before calling
-	 *
-	 * @param move
-	 */
-	public void makeMove(Move move){
-		move(move);
-		currentMove = Color.getOpposite(currentMove);
-		moveHistory.add(move);
-	}
-
 	@Override
 	public int getBlackKingPosition() {
 		return blackKing.getPosition();
@@ -202,7 +182,8 @@ public class BoardState extends AbstractBoard<BoardState>{
 		return whiteKing.getPosition();
 	}
 
-	public void move(Move move){
+	public MoveEffect move(Move move){
+		MoveEffect effect = MoveEffect.NONE;
 		for (Pawn pawn : doubleMovingPawns){
 			pawn.setDoubleMove(false);
 		}
@@ -218,10 +199,12 @@ public class BoardState extends AbstractBoard<BoardState>{
 				offset = 1;
 			}
 			if (move.getStartPosition() + 2 == move.getEndPosition()){
+				effect = MoveEffect.CASTLE_KINGSIDE;
 				rookPosition = move.getStartPosition()+3 + offset;
 				futureRookPosition = move.getStartPosition()+1;
 			}
 			else{
+				effect = MoveEffect.CASTLE_QUEENSIDE;
 				rookPosition = move.getStartPosition()-4 + offset;
 				futureRookPosition = move.getStartPosition()-1;
 			}
@@ -239,9 +222,31 @@ public class BoardState extends AbstractBoard<BoardState>{
 				doubleMovingPawns.add((Pawn)piece);
 			}
 			if (pawnQueening((Pawn)piece)){
+				effect = MoveEffect.QUEENING_PAWN;
 				board[piece.getPosition()] = new Queen(piece.getColor(), piece.getPosition());
 			}
+			//rest is en passant rules
+			int offset = 1;
+			if (fromPiece.getColor() == Color.WHITE){
+				offset = -1;
+			}
+			if (playerColor == Color.BLACK){
+				offset *= -1;
+			}
+			else if (fromPiece.getPosition() + 9 * offset == move.getEndPosition()){
+				AbstractPiece potentialPawn = board[fromPiece.getPosition() - offset];
+				if (potentialPawn instanceof Pawn){
+					board[potentialPawn.getPosition()] = new EmptyPiece(potentialPawn.getPosition());
+				}
+			}
+			else if (fromPiece.getPosition() + 11 * offset == move.getEndPosition()){
+				AbstractPiece potentialPawn = board[fromPiece.getPosition()+ offset];
+				if (potentialPawn instanceof Pawn){
+					board[potentialPawn.getPosition()] = new EmptyPiece(potentialPawn.getPosition());
+				}
+			}
 		}
+		return effect;
 	}
 
 
@@ -313,6 +318,27 @@ public class BoardState extends AbstractBoard<BoardState>{
 		BoardState afterMoveBoard = new BoardState(this);
 		afterMoveBoard.makeMove(move);
 		return !afterMoveBoard.kingInCheck(fromPiece.getColor());
+	}
+
+	@Override
+	public int getGraphicalXFromPosition(int position) {
+		position -= 20;
+		int x = (position%10) -1;
+
+		return x;
+	}
+
+	@Override
+	public int getGraphicalYFromPosition(int position) {
+		position -= 20;
+		int y = position/10;
+
+		return y;
+	}
+
+	@Override
+	public int getBoardStatePositionFromGraphicalPosition(int x, int y) {
+		return 20 + ((y * 10) + x + 1);
 	}
 
 	private boolean isSpecificPieceMoveValid(AbstractPiece fromPiece, AbstractPiece toPiece){
@@ -664,6 +690,32 @@ public class BoardState extends AbstractBoard<BoardState>{
 		}
 
 		return pieceString;
+	}
+
+
+	private void setupDebugPosition(Color playerColor){
+		for (int i = 0; i < BOARD_SIZE; i++){
+			int digit = i % 10;
+			if (i > 20 && i < 99 && digit != 0 && digit != 9){
+				board[i] = getDebugPieceForPosition(i, playerColor);
+			}
+			else{
+				board[i] = InvalidPiece.getInstance();
+			}
+		}
+	}
+
+
+	private AbstractPiece getDebugPieceForPosition(int position, Color playerColor){
+		Color engineColor = Color.getOpposite(playerColor);
+		switch (position){
+			case 25:
+				return new Pawn(engineColor, position);
+			case 44:
+				return new Pawn(playerColor, position);
+			default:
+				return new EmptyPiece(position);
+		}
 	}
 	
 	
