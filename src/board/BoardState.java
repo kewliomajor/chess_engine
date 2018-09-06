@@ -103,11 +103,6 @@ public class BoardState extends AbstractBoard<BoardState>{
 	}
 
 
-	public Object getObject(int position){
-		return board[position];
-	}
-
-
 	public AbstractPiece getPiece(int i, int j){
 		int row = (10 * i) + 20;
 		j+= 1;

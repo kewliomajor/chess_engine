@@ -7,7 +7,6 @@ import engine.ChessEngine;
 import pieces.*;
 import sun.awt.image.OffScreenImageSource;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -15,13 +14,7 @@ import java.awt.*;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class GraphicalBoard<T> {
@@ -30,45 +23,18 @@ public class GraphicalBoard<T> {
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
     private ButtonPiece[][] chessBoardSquares = new ButtonPiece[8][8];
     private JPanel chessBoard;
-    private static final String COLS = "ABCDEFGH";
+    private static String COLS = "ABCDEFGH";
+    private static String ROWS = "87654321";
     private static final String EVAL_STRING = "Current Evaluation: ";
     private ButtonPiece currentlySelected;
     private ArrayList<ButtonPiece> currentValidMoves = new ArrayList<>();
     private ArrayList<ButtonPiece> lastComputerMove = new ArrayList<>();
     private AbstractBoard<T> boardState;
     private ChessEngine<ByteBoard> engine;
+    private ChessGraphics chessGraphics = new ChessGraphics();
     private boolean waitingForComputer = false;
     private JLabel currentEval = new JLabel(EVAL_STRING, SwingConstants.LEFT);
 
-
-    private static final int SIZE = 64;
-    private static final BufferedImage SHEET;
-    static {
-        try {
-            SHEET = ImageIO.read(new File("src/resources/pieces.png"));
-        } catch (IOException x) {
-            throw new UncheckedIOException(x);
-        }
-    }
-    private static final BufferedImage GOLD_KING    = SHEET.getSubimage(0, 0,    SIZE, SIZE);
-    private static final BufferedImage SILVER_KING  = SHEET.getSubimage(0, SIZE, SIZE, SIZE);
-    private static final BufferedImage GOLD_QUEEN     = SHEET.getSubimage(SIZE, 0,    SIZE, SIZE);
-    private static final BufferedImage SILVER_QUEEN   = SHEET.getSubimage(SIZE, SIZE, SIZE, SIZE);
-    private static final BufferedImage GOLD_ROOK     = SHEET.getSubimage(2 * SIZE, 0,    SIZE, SIZE);
-    private static final BufferedImage SILVER_ROOK   = SHEET.getSubimage(2 * SIZE, SIZE, SIZE, SIZE);
-    private static final BufferedImage GOLD_KNIGHT   = SHEET.getSubimage(3 * SIZE, 0,    SIZE, SIZE);
-    private static final BufferedImage SILVER_KNIGHT = SHEET.getSubimage(3 * SIZE, SIZE, SIZE, SIZE);
-    private static final BufferedImage GOLD_BISHOP   = SHEET.getSubimage(4 * SIZE, 0,    SIZE, SIZE);
-    private static final BufferedImage SILVER_BISHOP = SHEET.getSubimage(4 * SIZE, SIZE, SIZE, SIZE);
-    private static final BufferedImage GOLD_PAWN     = SHEET.getSubimage(5 * SIZE, 0,    SIZE, SIZE);
-    private static final BufferedImage SILVER_PAWN   = SHEET.getSubimage(5 * SIZE, SIZE, SIZE, SIZE);
-    private static final List<BufferedImage> SPRITES =
-            Collections.unmodifiableList(Arrays.asList(GOLD_KING,  SILVER_KING,
-                    GOLD_QUEEN,   SILVER_QUEEN,
-                    GOLD_ROOK,   SILVER_ROOK,
-                    GOLD_KNIGHT, SILVER_KNIGHT,
-                    GOLD_BISHOP, SILVER_BISHOP,
-                    GOLD_PAWN,   SILVER_PAWN));
 
 
     public GraphicalBoard(AbstractBoard<T> boardState) {
@@ -138,7 +104,7 @@ public class GraphicalBoard<T> {
                 ImageIcon icon;
                 int position = getBoardStatePositionFromButtonPosition(jj, ii);
                 String piece = boardState.getPieceString(position).trim();
-                icon = getPieceIcon(piece, boardState.getPieceColor(position));
+                icon = chessGraphics.getPieceIcon(piece, boardState.getPieceColor(position));
                 ButtonPiece b = new ButtonPiece(position, jj, ii);
                 b.setMargin(buttonMargin);
                 b.addActionListener(new BoardButtonListener());
@@ -184,52 +150,12 @@ public class GraphicalBoard<T> {
             for (int jj = 0; jj < 8; jj++) {
                 switch (jj) {
                     case 0:
-                        chessBoard.add(new JLabel("" + (ii + 1), SwingConstants.CENTER));
+                        chessBoard.add(new JLabel(ROWS.substring(ii, ii + 1), SwingConstants.CENTER));
                     default:
                         chessBoard.add(chessBoardSquares[jj][ii]);
                 }
             }
         }
-    }
-
-    private ImageIcon getPieceIcon(String piece, pieces.Color color){
-        BufferedImage image = null;
-        int offset = 0;
-        if (color == pieces.Color.WHITE){
-            offset = 1;
-        }
-
-        switch (piece) {
-            case "E":
-                image = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
-                break;
-            case "I":
-                throw new RuntimeException("shouldn't have an invalid piece at a valid board position");
-            case "P":
-                image = SPRITES.get(10 + offset);
-                break;
-            case "R":
-                image = SPRITES.get(4 + offset);
-                break;
-            case "N":
-                image = SPRITES.get(6 + offset);
-                break;
-            case "B":
-                image = SPRITES.get(8 + offset);
-                break;
-            case "Q":
-                image = SPRITES.get(2 + offset);
-                break;
-            case "K":
-                image = SPRITES.get(offset);
-                break;
-        }
-
-        if (image == null){
-            throw new RuntimeException("No valid piece available");
-        }
-
-        return new ImageIcon(image);
     }
 
     public final JComponent getGui() {
@@ -287,7 +213,7 @@ public class GraphicalBoard<T> {
         futureRookPosition = startPosition+1;
         ButtonPiece rook = getButtonFromBoardStatePosition(rookPosition);
         ButtonPiece futureRook = getButtonFromBoardStatePosition(futureRookPosition);
-        ImageIcon emptyIcon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
+        ImageIcon emptyIcon = chessGraphics.getEmptyIcon();
         futureRook.setIcon(rook.getIcon());
         rook.setIcon(emptyIcon);
     }
@@ -303,21 +229,21 @@ public class GraphicalBoard<T> {
         futureRookPosition = startPosition-1;
         ButtonPiece rook = getButtonFromBoardStatePosition(rookPosition);
         ButtonPiece futureRook = getButtonFromBoardStatePosition(futureRookPosition);
-        ImageIcon emptyIcon = new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB));
+        ImageIcon emptyIcon = chessGraphics.getEmptyIcon();
         futureRook.setIcon(rook.getIcon());
         rook.setIcon(emptyIcon);
     }
 
     private void queeningPawn(ButtonPiece button, ButtonPiece fromButton, int endPosition){
-        ImageIcon currentIcon = getPieceIcon("Q", boardState.getPieceColor(endPosition));
-        fromButton.setIcon(new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB)));
+        ImageIcon currentIcon = chessGraphics.getPieceIcon("Q", boardState.getPieceColor(endPosition));
+        fromButton.setIcon(chessGraphics.getEmptyIcon());
         fromButton.setBackground(fromButton.getColor());
         button.setIcon(currentIcon);
     }
 
     private void moveNormally(ButtonPiece button, ButtonPiece fromButton){
         ImageIcon currentIcon = (ImageIcon)fromButton.getIcon();
-        fromButton.setIcon(new ImageIcon(new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB)));
+        fromButton.setIcon(chessGraphics.getEmptyIcon());
         fromButton.setBackground(fromButton.getColor());
         button.setIcon(currentIcon);
     }
@@ -341,37 +267,14 @@ public class GraphicalBoard<T> {
 
     private void displayMoves(int piecePosition){
         List<Move> moves = boardState.getValidPieceMoves(piecePosition);
-        System.out.println("number of possible moves: " + moves.size());
+        //System.out.println("number of possible moves: " + moves.size());
         for (Move move : moves){
-            //System.out.println("checking move validity " + move.getStartPosition() + " to " +move.getEndPosition());
             if (boardState.isMoveValid(move)){
                 ButtonPiece button = getButtonFromBoardStatePosition(move.getEndPosition());
-                //System.out.println("setting button to green at " + move.getEndPosition());
                 button.setBackground(Color.GREEN);
                 currentValidMoves.add(button);
             }
         }
-    }
-
-    private boolean isColorPiece(OffScreenImageSource source, pieces.Color color){
-        int offset = 0;
-        if (color == pieces.Color.WHITE){
-            offset = 1;
-        }
-        List<Integer> possiblePositions = new ArrayList<Integer>() {{
-            add(10);
-            add(8);
-            add(6);
-            add(4);
-            add(2);
-            add(0);
-        }};
-        for (Integer pos : possiblePositions){
-            if (source.equals(SPRITES.get(pos + offset).getSource())){
-                return true;
-            }
-        }
-        return false;
     }
 
     private void makeEngineMove(){
@@ -385,7 +288,6 @@ public class GraphicalBoard<T> {
             System.out.println(move.getStartPosition() + " " + move.getEndPosition());
             ButtonPiece fromPiece = getButtonFromBoardStatePosition(move.getStartPosition());
             ButtonPiece toPiece = getButtonFromBoardStatePosition(move.getEndPosition());
-            boardState.isMoveValid(move);
             movePiece(toPiece, fromPiece);
             toPiece.setBackground(Color.YELLOW);
             fromPiece.setBackground(Color.YELLOW);
@@ -443,13 +345,12 @@ public class GraphicalBoard<T> {
     }
 
     private class BoardButtonListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             ButtonPiece button = (ButtonPiece)e.getSource();
             ImageIcon icon = (ImageIcon)button.getIcon();
             OffScreenImageSource source = (OffScreenImageSource)icon.getImage().getSource();
-            if (!isColorPiece(source, PLAYER_COLOR)){
+            if (!chessGraphics.isColorPiece(source, PLAYER_COLOR)){
                 //checking for green color ensures its a valid move
                 if (currentlySelected != null && button.getBackground() == Color.GREEN && !waitingForComputer){
                     movePiece(button, currentlySelected);
@@ -467,7 +368,6 @@ public class GraphicalBoard<T> {
     }
 
     private class NewGameListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             boardState = (AbstractBoard<T>) boardState.getInstance(PLAYER_COLOR);
@@ -476,7 +376,6 @@ public class GraphicalBoard<T> {
     }
 
     private class ResignListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             showWinner(pieces.Color.getOpposite(PLAYER_COLOR));
@@ -486,6 +385,8 @@ public class GraphicalBoard<T> {
     private class SwapColorListener implements  ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            COLS = new StringBuilder(COLS).reverse().toString();
+            ROWS = new StringBuilder(ROWS).reverse().toString();
             engine.setEngineColor(PLAYER_COLOR);
             PLAYER_COLOR = pieces.Color.getOpposite(PLAYER_COLOR);
             boardState = (AbstractBoard<T>) boardState.getInstance(PLAYER_COLOR);

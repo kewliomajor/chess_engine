@@ -41,8 +41,6 @@ public abstract class AbstractBoard<T> {
 
     public abstract List<Move> getValidPieceMoves(int position);
 
-    public abstract Object getObject(int position);
-
     public abstract String getPieceString(int position);
 
     public abstract Color getPieceColor(int position);

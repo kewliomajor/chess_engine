@@ -520,11 +520,6 @@ public class ByteBoard extends AbstractBoard<ByteBoard>{
     }
 
 
-    public Object getObject(int position){
-        return board[position];
-    }
-
-
     private List<Move> getPieceMoves(int position){
         List<Move> moves;
 
