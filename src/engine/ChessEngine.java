@@ -14,6 +14,7 @@ import java.util.Map;
 public class ChessEngine<T> {
 
     private static final int SEARCH_DEPTH = 4;
+    private static final int COMPUTE_THREAD_PRIORITY = 5;
     private Color engineColor;
     private OpeningBook openingBook;
     private List<ComputeThread<T>> runningThreads = new ArrayList<>();
@@ -40,7 +41,7 @@ public class ChessEngine<T> {
             //System.out.println("starting response thread for move from " + validMove.getStartPosition() + " to " + validMove.getEndPosition());
             ResponseComputeThread thread = new ResponseComputeThread(afterMoveBoard, SEARCH_DEPTH);
             responses.put(validMove, thread);
-            thread.setPriority(5);
+            thread.setPriority(COMPUTE_THREAD_PRIORITY);
             thread.start();
         }
     }
@@ -79,17 +80,7 @@ public class ChessEngine<T> {
             return response;
         }
         Move lastMove = history.get(history.size()-1);
-        ResponseComputeThread correctThread = null;
-
-        for (Move move : responses.keySet()){
-            ResponseComputeThread thread = responses.get(move);
-            if (move.equals(lastMove)){
-                correctThread = thread;
-            }
-            else{
-                thread.killThread();
-            }
-        }
+        ResponseComputeThread correctThread = getCorrectResponseThread(lastMove);
 
         if (correctThread == null){
             System.out.println("no thread for that move");
@@ -105,6 +96,22 @@ public class ChessEngine<T> {
         }
 
         return response;
+    }
+
+    private ResponseComputeThread getCorrectResponseThread(Move lastMove){
+        ResponseComputeThread correctThread = null;
+
+        for (Move move : responses.keySet()){
+            ResponseComputeThread thread = responses.get(move);
+            if (move.equals(lastMove)){
+                correctThread = thread;
+            }
+            else{
+                thread.killThread();
+            }
+        }
+
+        return correctThread;
     }
 
     private Move computeBestMove(AbstractBoard boardState, List<ComputeThread<T>> runningThreads, int searchDepth){
@@ -130,7 +137,6 @@ public class ChessEngine<T> {
         }
 
         Move bestMove = computeFromScore(validMoves, boardState, runningThreads, searchDepth);
-
         runningThreads.clear();
 
         //when it's going to be checkmated no matter what it gets mad and doesn't want to make a move lol
@@ -158,7 +164,7 @@ public class ChessEngine<T> {
             //System.out.println("starting thread for move from " + move.getStartPosition() + " to " + move.getEndPosition());
             ComputeThread thread = new ComputeThread(afterMoveBoard, move, searchDepth);
             runningThreads.add(thread);
-            thread.setPriority(5);
+            thread.setPriority(COMPUTE_THREAD_PRIORITY);
             thread.start();
         }
         for (ComputeThread thread : runningThreads){
@@ -182,7 +188,6 @@ public class ChessEngine<T> {
         private int maxDepth;
         private Move bestResponse;
         private List<ComputeThread<T>> runningThreads = new ArrayList<>();
-        private boolean die = false;
 
 
         public ResponseComputeThread(AbstractBoard boardState, int maxDepth){
@@ -198,7 +203,6 @@ public class ChessEngine<T> {
             for (ComputeThread thread : runningThreads){
                 thread.killThread();
             }
-            die = true;
         }
 
         public void run(){

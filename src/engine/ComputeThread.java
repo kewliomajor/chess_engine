@@ -1,6 +1,5 @@
 package engine;
 import board.AbstractBoard;
-import board.BoardState;
 import pieces.Move;
 
 import java.util.List;

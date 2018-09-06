@@ -103,23 +103,8 @@ public class BoardState extends AbstractBoard<BoardState>{
 	}
 
 
-	public AbstractPiece getPiece(int i, int j){
-		int row = (10 * i) + 20;
-		j+= 1;
-		return board[row + j];
-	}
-
-
 	public Color getCurrentMoveColor(){
 		return currentMove;
-	}
-
-	public King getWhiteKing(){
-		return (King)whiteKing;
-	}
-
-	public King getBlackKing(){
-		return (King)blackKing;
 	}
 
 
@@ -566,14 +551,6 @@ public class BoardState extends AbstractBoard<BoardState>{
 		}
 
 		return boardString;
-	}
-
-
-	private boolean isBasicMoveValid(AbstractPiece fromPiece, AbstractPiece toPiece){
-		if (toPiece instanceof EmptyPiece || fromPiece.getColor() == Color.getOpposite(toPiece.getColor())){
-			return true;
-		}
-		return false;
 	}
 
 
